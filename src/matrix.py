@@ -1,16 +1,18 @@
 class Matrix :
     def __init__(self,element) :
         self.elements = element
+        self.num_rows = len(element)
+        self.num_cols = len(element[0])
 
     def copy(self) :
         return self
 
     def add(self, matrix) :
-        new_elements = [[],[]]
+        new_elements = [[] for blank in range(self.num_rows)]
         outer_leng = 0
-        while outer_leng < 2 :
+        while outer_leng < self.num_rows  :
             inner_leng = 0
-            while inner_leng < 2 : 
+            while inner_leng < self.num_cols : 
                 new_elements[outer_leng].append(self.elements[outer_leng][inner_leng] + matrix.elements[outer_leng][inner_leng])
                 inner_leng += 1
             outer_leng += 1
@@ -18,11 +20,11 @@ class Matrix :
 
 
     def subtract(self, matrix) :
-        new_elements = [[],[]]
+        new_elements = [[] for blank in range(self.num_rows)]
         outer_leng = 0
-        while outer_leng < 2 :
+        while outer_leng < self.num_rows  :
             inner_leng = 0
-            while inner_leng < 2 : 
+            while inner_leng < self.num_cols : 
                 new_elements[outer_leng].append(self.elements[outer_leng][inner_leng] - matrix.elements[outer_leng][inner_leng])
                 inner_leng += 1
             outer_leng += 1
@@ -37,12 +39,31 @@ class Matrix :
         return Matrix(new_elements)
         
     def scalar_multiply(self, scalar) :
-        new_elements = [[],[]]
+        new_elements = [[] for blank in range(self.num_rows)]
         outer_leng = 0
-        while outer_leng < 2 :
-            inner_leng = 0
-            while inner_leng < 2 : 
-                new_elements[outer_leng].append(self.elements[outer_leng][inner_leng] * scalar)
-                inner_leng += 1
+        while outer_leng < self.num_rows :
+            for num in self.elements[outer_leng] :
+                new_elements[outer_leng].append(round(num * scalar,1))
             outer_leng += 1
         return Matrix(new_elements)
+
+    def transpose(self) :
+        new_elements = [[] for blank in range(self.num_cols)]
+        outer_leng = 0
+        while outer_leng < self.num_rows :
+            inner_leng = 0
+            while inner_leng < self.num_cols :
+                new_elements[outer_leng].append(round(num * scalar,1))
+            outer_leng += 1
+        return Matrix(new_elements)
+
+    def is_equal(self, matrix) : 
+        outer_leng = 0
+        while outer_leng < self.num_rows  :
+            inner_leng = 0
+            while inner_leng < self.num_cols : 
+                if self.elements[outer_leng][inner_leng] != matrix.elements[outer_leng][inner_leng] :
+                    return False
+                inner_leng += 1
+            outer_leng += 1
+        return True
