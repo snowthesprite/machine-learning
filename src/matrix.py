@@ -49,12 +49,13 @@ class Matrix :
 
     def transpose(self) :
         new_elements = [[] for blank in range(self.num_cols)]
-        outer_leng = 0
-        while outer_leng < self.num_rows :
-            inner_leng = 0
-            while inner_leng < self.num_cols :
-                new_elements[outer_leng].append(round(num * scalar,1))
-            outer_leng += 1
+        collums = 0
+        while collums < self.num_cols :
+            rows = 0
+            while rows < self.num_rows :
+                new_elements[collums].append(self.elements[rows][collums])
+                rows += 1
+            collums += 1
         return Matrix(new_elements)
 
     def is_equal(self, matrix) : 
