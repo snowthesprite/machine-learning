@@ -9,25 +9,25 @@ class Matrix :
 
     def add(self, matrix) :
         new_elements = [[] for blank in range(self.num_rows)]
-        outer_leng = 0
-        while outer_leng < self.num_rows  :
-            inner_leng = 0
-            while inner_leng < self.num_cols : 
-                new_elements[outer_leng].append(self.elements[outer_leng][inner_leng] + matrix.elements[outer_leng][inner_leng])
-                inner_leng += 1
-            outer_leng += 1
+        rows = 0
+        while rows < self.num_rows  :
+            collums = 0
+            while collums < self.num_cols : 
+                new_elements[rows].append(self.elements[rows][collums] + matrix.elements[rows][collums])
+                collums += 1
+            rows += 1
         return Matrix(new_elements)
 
 
     def subtract(self, matrix) :
         new_elements = [[] for blank in range(self.num_rows)]
-        outer_leng = 0
-        while outer_leng < self.num_rows  :
-            inner_leng = 0
-            while inner_leng < self.num_cols : 
-                new_elements[outer_leng].append(self.elements[outer_leng][inner_leng] - matrix.elements[outer_leng][inner_leng])
-                inner_leng += 1
-            outer_leng += 1
+        rows = 0
+        while rows < self.num_rows  :
+            collums = 0
+            while collums < self.num_cols : 
+                new_elements[rows].append(self.elements[rows][collums] - matrix.elements[rows][collums])
+                collums += 1
+            rows += 1
         return Matrix(new_elements)
 
     def matrix_multiply(self, matrix) :
@@ -40,11 +40,11 @@ class Matrix :
         
     def scalar_multiply(self, scalar) :
         new_elements = [[] for blank in range(self.num_rows)]
-        outer_leng = 0
-        while outer_leng < self.num_rows :
-            for num in self.elements[outer_leng] :
-                new_elements[outer_leng].append(round(num * scalar,1))
-            outer_leng += 1
+        rows = 0
+        while rows < self.num_rows :
+            for num in self.elements[rows] :
+                new_elements[rows].append(round(num * scalar,1))
+            rows += 1
         return Matrix(new_elements)
 
     def transpose(self) :
@@ -59,12 +59,12 @@ class Matrix :
         return Matrix(new_elements)
 
     def is_equal(self, matrix) : 
-        outer_leng = 0
-        while outer_leng < self.num_rows  :
-            inner_leng = 0
-            while inner_leng < self.num_cols : 
-                if self.elements[outer_leng][inner_leng] != matrix.elements[outer_leng][inner_leng] :
+        rows = 0
+        while rows < self.num_rows  :
+            collums = 0
+            while collums < self.num_cols : 
+                if self.elements[rows][collums] != matrix.elements[rows][collums] :
                     return False
-                inner_leng += 1
-            outer_leng += 1
+                collums += 1
+            rows += 1
         return True
