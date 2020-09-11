@@ -56,26 +56,46 @@ print('')
 
 A = Matrix([[1,0,2,0,3],[0,4,0,5,0],[6,0,7,0,8],[-1,-2,-3,-4,-5]])
 
+print('Is the num_rows and num_cols correct for the matrix A?')
+assert (A.num_rows, A.num_cols) == (4, 5), 'No they are not'
+print('Yes, they are')
+print('')
+
 A_t = A.transpose()
 
-assert A_t.elements == [[ 1,  0,  6, -1],[ 0,  4,  0, -2],[ 2,  0,  7, -3],[ 0,  5,  0, -4],[ 3,  0,  8, -5]]
-
+print('Did A properly transpose?')
+assert A_t.elements == [[ 1,  0,  6, -1],[ 0,  4,  0, -2],[ 2,  0,  7, -3],[ 0,  5,  0, -4],[ 3,  0,  8, -5]], 'No, it did not'
+print('Yes, it did')
+print('')
 
 B = A_t.matrix_multiply(A)
 
-assert B.elements == [[38,  2, 47,  4, 56],[ 2, 20,  6, 28, 10],[47,  6, 62, 12, 77],[ 4, 28, 12, 41, 20],[56, 10, 77, 20, 98]]
+print('Is the matrix B the product of A and A transpose?')
+assert B.elements == [[38,  2, 47,  4, 56],[ 2, 20,  6, 28, 10],[47,  6, 62, 12, 77],[ 4, 28, 12, 41, 20],[56, 10, 77, 20, 98]], 'No it is not'
+print('Yes it is')
+print('')
 
+C = B.scalar_multiply(0.1)
 
-C = B.scalar_multiply(1/10)
-
-assert C.elements == [[3.8,  .2, 4.7,  .4, 5.6],[ .2, 2.0,  .6, 2.8, 1.0],[4.7,  .6, 6.2, 1.2, 7.7],[ .4, 2.8, 1.2, 4.1, 2.0],[5.6, 1.0, 7.7, 2.0, 9.8]]
+print('Is the matrix C the matrix B multiplied by 0.1?')
+assert C.elements == [[3.8,  .2, 4.7,  .4, 5.6],[ .2, 2.0,  .6, 2.8, 1.0],[4.7,  .6, 6.2, 1.2, 7.7],[ .4, 2.8, 1.2, 4.1, 2.0],[5.6, 1.0, 7.7, 2.0, 9.8]], 'No it is not'
+print('Yes, it is')
+print('')
 
 D = B.subtract(C)
 
-assert D.elements == [[34.2,  1.8, 42.3,  3.6, 50.4],[ 1.8, 18. ,  5.4, 25.2,  9. ],[42.3,  5.4, 55.8, 10.8, 69.3],[ 3.6, 25.2, 10.8, 36.9, 18. ],[50.4,  9. , 69.3, 18. , 88.2]]
+print('Is the matrix D the matrix B subtracted by the matrix C?')
+assert D.elements == [[34.2,  1.8, 42.3,  3.6, 50.4],[ 1.8, 18. ,  5.4, 25.2,  9. ],[42.3,  5.4, 55.8, 10.8, 69.3],[ 3.6, 25.2, 10.8, 36.9, 18. ],[50.4,  9. , 69.3, 18. , 88.2]], 'No it is not'
+print('Yes, it is')
+print('')
 
 E = D.add(C)
 
-assert E.elements == [[38,  2, 47,  4, 56],[ 2, 20,  6, 28, 10],[47,  6, 62, 12, 77],[ 4, 28, 12, 41, 20],[56, 10, 77, 20, 98]]
+print('Is the matrix E the matrix D subtracted by the matrix C?')
+assert E.elements == [[38,  2, 47,  4, 56],[ 2, 20,  6, 28, 10],[47,  6, 62, 12, 77],[ 4, 28, 12, 41, 20],[56, 10, 77, 20, 98]], 'No it is not'
+print('Yes, it is')
+print('')
 
-assert (E.is_equal(B), E.is_equal(C)) == (True, False)
+print('Is the matrix E equal to the matrix B, but not equal to the matrix C?')
+assert (E.is_equal(B), E.is_equal(C)) == (True, False), 'No it is not'
+print('Yes, it is')
