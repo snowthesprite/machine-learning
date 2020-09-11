@@ -31,11 +31,19 @@ class Matrix :
         return Matrix(new_elements)
 
     def matrix_multiply(self, matrix) :
-        top_left_elements = self.elements[0][0] * matrix.elements[0][0] + self.elements[0][1] * matrix.elements[1][0]
-        top_right_elements = self.elements[0][0] * matrix.elements[0][1] + self.elements[0][1] * matrix.elements[1][1]
-        bottom_left_elements = self.elements[1][0] * matrix.elements[0][0] + self.elements[1][1] * matrix.elements[1][0]
-        bottom_right_elements = self.elements[1][0] * matrix.elements[0][1] + self.elements[1][1] * matrix.elements[1][1]
-        new_elements = [[top_left_elements, top_right_elements], [bottom_left_elements, bottom_right_elements]]
+        new_elements = [[] for blank in range(self.num_rows)]
+        rows = 0
+        while rows < self.num_rows :
+            matrix_collums = 0
+            while matrix_collums < matrix.num_cols :
+                end_number = 0
+                collums = 0
+                while collums < self.num_cols :
+                    end_number += self.elements[rows][collums] * matrix.elements[collums][matrix_collums]
+                    collums += 1
+                new_elements[rows].append(end_number)
+                matrix_collums += 1
+            rows += 1
         return Matrix(new_elements)
         
     def scalar_multiply(self, scalar) :
