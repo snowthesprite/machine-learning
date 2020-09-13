@@ -55,7 +55,11 @@ class Matrix :
 
     def get_pivot_row(self, column_index) :
         for rows in range(self.num_rows) :
-            if self.elements[rows][column_index] != 0 :
+            ran = False
+            for collums in range(0,column_index) :
+                if self.elements[rows][collums] != 0 :
+                    ran = True
+            if self.elements[rows][column_index] != 0 and not ran :
                 return rows
 
     def swap_rows(self, row_index1, row_index2) :
@@ -102,7 +106,7 @@ class Matrix :
             sign = -1
         elif non_zero > 0 :
             sign = 1
-        for rows in range(self.num_rows, row_index) :
+        for rows in range(0, row_index) :
             while self.elements[rows][col_index] != 0 and rows != row_index :
                 if self.elements[rows][col_index] < 0 and sign == -1 :
                     sign = 1
