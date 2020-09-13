@@ -14,10 +14,18 @@ A.normalize_row(0)
 
 print(A.elements)
 
-#print(A.elements)
+A.clear_below(0)
 
-#print(A.elements)
+assert A.elements == [[1, 2, 3],[0, 1, 2],[0, 2, 2]]
 
-#print(A.elements)
+#assert A.get_pivot_row(1) == 1
 
-#print(A.elements)
+A.normalize_row(1)
+
+assert A.elements == [[1, 2, 3], [0, 1, 2], [0, 2, 2]]
+
+A.clear_below(1)
+print( A.elements)
+assert A.elements == [[1, 2, 3], [0, 1, 2], [0, 0, -2]]
+
+#assert
