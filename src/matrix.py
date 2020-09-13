@@ -55,15 +55,40 @@ class Matrix :
 
     def get_pivot_row(self, column_index) :
         for rows in range(self.num_rows) :
-            if self.elements[rows][collumn_index] != 0 :
+            if self.elements[rows][column_index] != 0 :
                 return rows
 
-    #def swap_rows(self, row_index1, row_index2) :
+    def swap_rows(self, row_index1, row_index2) :
+        self.elements[row_index1], self.elements[row_index2] = self.elements[row_index2], self.elements[row_index1]
+
+    def normalize_row(self, row_index) :
+        run = False
+        for collums in range(self.num_cols) :
+            if self.elements[row_index][collums] != 0 and not run:
+                normalizer = self.elements[row_index][collums]
+                run = True
+        for collums in range(self.num_cols) :
+            self.elements[row_index][collums] = int(self.elements[row_index][collums] / normalizer)
 
 
-    #def normalize_row(self, row_index) :
-
-    #def clear_below(self, row_index) :
-        
+    def clear_below(self, row_index) :
+        run = False
+        for collums in range(self.num_cols) :
+            if self.elements[row_index][collums] != 0 and not run:
+                non_zero = self.elements[row_index][collums]
+                col_index = collums
+                run = True
+        if non_zero < 0 :
+            sign = -1
+        elif non_zero > 0 :
+            sign = 1
+        for rows in range(num_rows) :
+            while self.elements[rows][col_index] != 0 and rows != row_index :
+                if self.elements[rows][col_index] < 0 and sign == -1 :
+                    sign = 1
+                elif self.elements[rows][col_index] > 0 and sign == 1 :
+                    sign = -1
+                for collums in range(self.num_cols) :
+                    self.elements[rows][collums] = self.elements[rows][collums] + (self.elements[row_index][collums] * sign)
 
     #def clear_above(self, row_index) :
