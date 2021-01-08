@@ -1,2 +1,7 @@
 language = "bash"
-run = "python tests/test_matrix.py"
+run = "bash main.sh"
+#run = "python tests/test_dataframe.py"
+#run = "python tests/test_matrix_2.py"
+
+
+#run = "python analysis/rref_vs_cofactor_method_determinant.py"
