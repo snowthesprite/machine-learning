@@ -112,6 +112,8 @@ class DataFrame :
         all_rows.pop(len(all_rows) - 1)
         if header == True :
             key_names = all_rows[0]
+        else :
+            key_names = [str(col_num) for col_num in range(len(all_rows[0]))]
         all_rows.pop(0)
         new_df = {}
         for key in key_names :

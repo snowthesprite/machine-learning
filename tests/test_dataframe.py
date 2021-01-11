@@ -1,7 +1,7 @@
 import sys
 sys.path.append('src')
 from dataframe import DataFrame
-''''
+
 data_dict = {'Pete': [1, 0, 1, 0],'John': [2, 1, 0, 2],'Sarah': [3, 1, 4, 0]}
 
 df1 = DataFrame(data_dict, column_order = ['Pete', 'John', 'Sarah'])
@@ -61,24 +61,19 @@ assert df.order_by('age', ascending=True).to_array() == [['Kevin', 'Fray', 5], [
 assert df.order_by('firstname', ascending=False).to_array() == [['Sylvia', 'Mendez', 9], ['Kevin', 'Fray', 5], ['Charles', 'Trapp', 17], ['Anna', 'Smith', 13]], 'No, order_by does not work for "firstname" and ascending = False'
 print('Yes it does!')
 print()
-'''
+
 import csv
 
 test = []
 
 path_to_datasets = '/home/runner/machine-learning/datasets/'
 filename = 'airtravel.csv' 
-with open(path_to_datasets + filename, "r") as file:
-    data = csv.reader(file, quotechar='|', skipinitialspace = True)
-    for row in data :
-        #print(row)
-        test.append(row)
-test.pop(len(test) - 1)
-print()
-
 filepath = path_to_datasets + filename
 df = DataFrame.from_csv(filepath, header=True)
 
-print(df.to_array())
+print('Does from_csv work?')
 
-#assert df.to_array() == [['"Month"', '"1958"', '"1959"', '"1960"'], ['"JAN"',  '340',  '360',  '417'], ['"FEB"',  '318',  '342',  '391'], ['"MAR"',  '362',  '406',  '419'], ['"APR"',  '348',  '396',  '461'], ['"MAY"',  '363',  '420',  '472'], ['"JUN"',  '435',  '472',  '535'], ['"JUL"',  '491',  '548',  '622'], ['"AUG"',  '505',  '559',  '606'], ['"SEP"',  '404',  '463',  '508'], ['"OCT"',  '359',  '407',  '461'], ['"NOV"',  '310',  '362',  '390'], ['"DEC"',  '337',  '405',  '432']]
+assert df.columns == ['"Month"', '"1958"', '"1959"', '"1960"'], 'No, the columns are not correct'
+
+assert df.to_array() == [['"JAN"',  '340',  '360',  '417'], ['"FEB"',  '318',  '342',  '391'], ['"MAR"',  '362',  '406',  '419'], ['"APR"',  '348',  '396',  '461'], ['"MAY"',  '363',  '420',  '472'], ['"JUN"',  '435',  '472',  '535'], ['"JUL"',  '491',  '548',  '622'], ['"AUG"',  '505',  '559',  '606'], ['"SEP"',  '404',  '463',  '508'], ['"OCT"',  '359',  '407',  '461'], ['"NOV"',  '310',  '362',  '390'], ['"DEC"',  '337',  '405',  '432']], 'No, the data is not scribed correctly'
+print('Yes it does')
