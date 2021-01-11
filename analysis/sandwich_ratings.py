@@ -11,5 +11,7 @@ df = DataFrame.from_array([[0, 0, 1], [1, 0, 2], [2, 0, 4], [4, 0, 8], [6, 0, 9]
 regressor = LinearRegressor(df, dependent_variable = 'Taste Rating')
 
 print(regressor.predict({'Slices of Beef': 5, 'Tbsp of Peanut Butter': 0}))
+
 print()
+
 print(regressor.predict({'Slices of Beef': 5, 'Tbsp of Peanut Butter': 5}))

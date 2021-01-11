@@ -62,8 +62,20 @@ assert df.order_by('firstname', ascending=False).to_array() == [['Sylvia', 'Mend
 print('Yes it does!')
 print()
 '''
+import csv
+
+test = []
 
 path_to_datasets = '/home/runner/machine-learning/datasets/'
 filename = 'airtravel.csv' 
 with open(path_to_datasets + filename, "r") as file:
+    data = csv.reader(file, quotechar='|', skipinitialspace = True)
+    for row in data :
+        print(row)
+        test.append(row)
+test.pop(len(test) - 1)
+print()
+with open(path_to_datasets + filename, "r") as file:
     print(file.read())
+
+assert test == [['"Month"', '"1958"', '"1959"', '"1960"'], ['"JAN"',  '340',  '360',  '417'], ['"FEB"',  '318',  '342',  '391'], ['"MAR"',  '362',  '406',  '419'], ['"APR"',  '348',  '396',  '461'], ['"MAY"',  '363',  '420',  '472'], ['"JUN"',  '435',  '472',  '535'], ['"JUL"',  '491',  '548',  '622'], ['"AUG"',  '505',  '559',  '606'], ['"SEP"',  '404',  '463',  '508'], ['"OCT"',  '359',  '407',  '461'], ['"NOV"',  '310',  '362',  '390'], ['"DEC"',  '337',  '405',  '432']]
