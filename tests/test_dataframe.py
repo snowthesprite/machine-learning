@@ -1,7 +1,7 @@
 import sys
 sys.path.append('src')
 from dataframe import DataFrame
-
+''''
 data_dict = {'Pete': [1, 0, 1, 0],'John': [2, 1, 0, 2],'Sarah': [3, 1, 4, 0]}
 
 df1 = DataFrame(data_dict, column_order = ['Pete', 'John', 'Sarah'])
@@ -60,4 +60,10 @@ assert df.order_by('age', ascending=True).to_array() == [['Kevin', 'Fray', 5], [
 
 assert df.order_by('firstname', ascending=False).to_array() == [['Sylvia', 'Mendez', 9], ['Kevin', 'Fray', 5], ['Charles', 'Trapp', 17], ['Anna', 'Smith', 13]], 'No, order_by does not work for "firstname" and ascending = False'
 print('Yes it does!')
-print() 
+print()
+'''
+
+path_to_datasets = '/home/runner/machine-learning/datasets/'
+filename = 'airtravel.csv' 
+with open(path_to_datasets + filename, "r") as file:
+    print(file.read())

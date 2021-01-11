@@ -101,3 +101,6 @@ class DataFrame :
             data_array = data_array_2
         return DataFrame.from_array(data_array, self.columns)
         
+    @classmethod
+    def from_csv(path_to_csv, header) :
+        pass
