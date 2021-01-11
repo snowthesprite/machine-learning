@@ -1,3 +1,4 @@
+import csv
 class DataFrame :
     def __init__(self, imputed_dict, column_order) :
         self.data_dict = imputed_dict
@@ -102,5 +103,19 @@ class DataFrame :
         return DataFrame.from_array(data_array, self.columns)
         
     @classmethod
-    def from_csv(path_to_csv, header) :
-        pass
+    def from_csv(self, path_to_csv, header) :
+        all_rows = []
+        with open(path_to_csv, "r") as file:
+            data = csv.reader(file, quotechar='|', skipinitialspace = True)
+            for row in data :
+                all_rows.append(row)
+        all_rows.pop(len(all_rows) - 1)
+        if header == True :
+            key_names = all_rows[0]
+        all_rows.pop(0)
+        new_df = {}
+        for key in key_names :
+            index = key_names.index(key)
+            key_data = [row[index] for row in all_rows]
+            new_df[key] = key_data
+        return DataFrame(new_df, key_names)
