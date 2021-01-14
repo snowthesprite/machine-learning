@@ -15,7 +15,7 @@ def show_board(locations) :
 def calc_cost(locations) : 
     hits = 0
     for queen in locations :
-        for direction in range(4) :
+        for direction in range(5) :
             for opposing_queen in locations :
                 if direction == 0 : #Up and Down
                     test_point = [0, queen[1]]
@@ -36,7 +36,7 @@ def calc_cost(locations) :
                         test_point[1] -= 1
                         if tuple(test_point) == opposing_queen :
                             hits += 1
-                            print(queen, opposing_queen, test_point, hits)
+                    test_point = list(queen)
                     while test_point[0] < 8 and test_point[1] < 8 : #bottom right
                         test_point[0] += 1
                         test_point[1] += 1
@@ -49,12 +49,13 @@ def calc_cost(locations) :
                         test_point[1] += 1                            
                         if tuple(test_point) == opposing_queen :
                             hits += 1
+                    test_point = list(queen)
                     while test_point[0] < 8 and test_point[1] > 0 : #bottom left
                         test_point[0] += 1
                         test_point[1] -= 1
                         if tuple(test_point) == opposing_queen :
                             hits += 1
-    print(hits)
+    return hits / 2
 
 
                        
@@ -65,4 +66,6 @@ print('The board')
 print()
 show_board(locations)
 print()
-calc_cost(locations)
+print('Can calc_cost find all overlaps between queens?')
+assert calc_cost(locations) == 10, 'No it can not'
+print('Yes it can')
