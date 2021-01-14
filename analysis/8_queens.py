@@ -36,21 +36,22 @@ def calc_cost(locations) :
                         test_point[1] -= 1
                         if tuple(test_point) == opposing_queen :
                             hits += 1
+                            print(queen, opposing_queen, test_point, hits)
                     while test_point[0] < 8 and test_point[1] < 8 : #bottom right
                         test_point[0] += 1
                         test_point[1] += 1
                         if tuple(test_point) == opposing_queen :
                             hits += 1
-                    elif direction == 3 : #top right to bottom left
+                elif direction == 4 : #top right to bottom left
                     test_point = list(queen)
-                    while test_point[0] > 0 and test_point[1] > 0 : #top right
+                    while test_point[0] > 0 and test_point[1] < 8 : #top right
                         test_point[0] -= 1
-                        test_point[1] -= 1
+                        test_point[1] += 1                            
                         if tuple(test_point) == opposing_queen :
                             hits += 1
-                    while test_point[0] < 8 and test_point[1] < 8 : #bottom left
+                    while test_point[0] < 8 and test_point[1] > 0 : #bottom left
                         test_point[0] += 1
-                        test_point[1] += 1
+                        test_point[1] -= 1
                         if tuple(test_point) == opposing_queen :
                             hits += 1
     print(hits)
