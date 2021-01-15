@@ -14,23 +14,17 @@ def show_board(locations) :
         print(row_string)
 
 def on_col(point_1, point_2) :
-    test_point = [0, point_1[1]]
-    while test_point[0] < 8 :
-        if tuple(test_point) == point_2 :
-            return True
-        test_point[0] += 1
+    if point_1[1] - point_2[1] == 0  :
+        return True
     return False
 
 def on_row(point_1, point_2) :
-    test_point = [point_1[0], 0]
-    while test_point[0] < 8 :
-        if tuple(test_point) == point_2 :
-            return True
-        test_point[1] += 1
+    if point_1[0] - point_2[0] == 0  :
+        return True
     return False
 
 def on_diagonal(point_1, point_2) :
-    slope = (point_2[1] - point_1[1]) / (point_2[0] - point_1[1])
+    slope = (point_2[0] - point_1[0]) / (point_2[1] - point_1[1])
     if slope == 1 or slope == -1 :
         return True
     return False
@@ -40,10 +34,11 @@ def calc_cost(locations) :
     for queen in locations :
         for opposing_queen in locations :
             if queen != opposing_queen :
-                row_test = on_row(queen, opposing_queen)
-                col_test = on_col(queen, opposing_queen)
-                diagonal_test = on_diagonal(queen, opposing_queen)
-                if row_test or col_test or diagonal_test :
+                if on_row(queen, opposing_queen):
+                    hits += 1
+                elif on_col(queen, opposing_queen):
+                    hits += 1
+                elif on_diagonal(queen, opposing_queen) :
                     hits += 1
     return hits / 2
 
@@ -72,4 +67,16 @@ print('Can calc_cost find all overlaps between queens?')
 assert calc_cost(locations) == 10, 'No it can not'
 print('Yes it can')
 
-print(random_optimizer(5))
+print(random_optimizer(10))
+print()
+
+print(random_optimizer(50))
+print()
+
+print(random_optimizer(100))
+print()
+
+print(random_optimizer(500))
+print()
+
+print(random_optimizer(1000))
