@@ -121,3 +121,14 @@ class DataFrame :
             key_data = [row[index] for row in all_rows]
             new_df[key] = key_data
         return DataFrame(new_df, key_names)
+
+    def create_interaction_terms(self, col_1, col_2) :
+        interaction_key = col_1 + " * " + col_2
+        col_1_vals = self.data_dict[col_1]
+        col_2_vals = self.data_dict[col_2]
+        interaction_value = [col_1_vals[index] * col_2_vals[index] for index in range(len(col_1_vals))]
+        new_data_dict = self.data_dict.copy()
+        new_data_dict[interaction_key] = interaction_value
+        new_columns = self.columns.copy()
+        new_columns.append(interaction_key)
+        return DataFrame(new_data_dict, new_columns)

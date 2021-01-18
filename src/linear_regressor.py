@@ -8,7 +8,7 @@ class LinearRegressor :
     def calculate_coefficient(self) :
         dict_data = self.data_frame.data_dict
         y_points = Matrix([[dict_data[self.depend_var][blank]] for blank in range(len(dict_data[self.depend_var]))])
-        independ_var =[] 
+        independ_var = [] 
         for x in dict_data :
             if x != self.depend_var :
                 independ_var.append(x)
