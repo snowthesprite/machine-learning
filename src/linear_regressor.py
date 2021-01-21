@@ -4,10 +4,11 @@ class LinearRegressor :
         self.data_frame = data_frame
         self.depend_var = dependent_variable
         self.coefficients = self.calculate_coefficient()
+        self.funct = lambda a : a
 
     def calculate_coefficient(self) :
         dict_data = self.data_frame.data_dict
-        y_points = Matrix([[dict_data[self.depend_var][blank]] for blank in range(len(dict_data[self.depend_var]))])
+        y_points = Matrix([[dict_data[self.depend_var][col_index]] for col_index in range(len(dict_data[self.depend_var]))])
         independ_var = [] 
         for x in dict_data :
             if x != self.depend_var :
@@ -34,10 +35,8 @@ class LinearRegressor :
         val = [1]
         for x in predictor.values() :
             val.append(x)
-        coef_val = []
-        for values in self.coefficients.values() :
-            coef_val.append(values)
+        coef_val = list(self.coefficients.values())
         y = 0
         for index in range(len(val)) :
             y += coef_val[index] * val[index]
-        return y
+        return self.funct(y)
