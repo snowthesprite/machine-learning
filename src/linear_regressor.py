@@ -13,7 +13,7 @@ class LinearRegressor :
         for x in dict_data :
             if x != self.depend_var :
                 independ_var.append(x)
-        eqn = [[1] for blank in range(len(dict_data[independ_var[0]]))]
+        eqn = [[1] for _ in range(len(dict_data[independ_var[0]]))]
         for row_index in range(len(dict_data[independ_var[0]])) :
             for var in independ_var :
                 eqn[row_index].append(dict_data[var][row_index])
