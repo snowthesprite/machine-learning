@@ -15,6 +15,8 @@ class LogisticRegressor (LinearRegressor):
         transformed_df = dict_data.copy()
         for index in range(len(dict_data[self.depend_var])) :
             element = dict_data[self.depend_var][index]
+            if element == 0 :
+                element = 0.1
             transformed_df[self.depend_var][index] = math.log((self.up_bound/element) - 1)
         return DataFrame(transformed_df, df.columns)
 
