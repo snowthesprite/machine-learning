@@ -19,4 +19,3 @@ class LogisticRegressor (LinearRegressor):
                 element = 0.1
             transformed_df[self.depend_var][index] = math.log((self.up_bound/element) - 1)
         return DataFrame(transformed_df, df.columns)
-

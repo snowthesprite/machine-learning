@@ -102,4 +102,25 @@ df = DataFrame.from_array(
 
 df = df.create_dummy_variables('condiments') 
 
-assert df.columns == ['beef', 'pb', 'mayo', 'jelly', 'rating']
+print('Does the create_dummy_variables correctly add the new columns and the correct data?')
+
+assert df.columns == ['beef', 'pb', 'mayo', 'jelly', 'rating'], 'The columns arent right'
+
+assert df.to_array() == [[0, 0, 0, 0, 1],
+[0, 0, 1, 0, 1],
+[0, 0, 0, 1, 4],
+[0, 0, 1, 1, 0],
+[5, 0, 0, 0, 4],
+[5, 0, 1, 0, 8],
+[5, 0, 0, 1, 1],
+[5, 0, 1, 1, 0],
+[0, 5, 0, 0, 5],
+[0, 5, 1, 0, 0],
+[0, 5, 0, 1, 9],
+[0, 5, 1, 1, 0],
+[5, 5, 0, 0, 0],
+[5, 5, 1, 0, 0],
+[5, 5, 0, 1, 0],
+[5, 5, 1, 1, 0]], 'The data isnt right'
+
+print('yes it does')
