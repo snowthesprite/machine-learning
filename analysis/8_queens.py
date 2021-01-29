@@ -1,4 +1,5 @@
 import random
+
 def show_board(locations) :
     board = [['.' for _ in range(8)] for __ in range(8)]
     index = 0

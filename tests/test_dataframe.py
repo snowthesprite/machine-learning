@@ -79,3 +79,27 @@ assert df.to_array() == [['"JAN"',  '340',  '360',  '417'], ['"FEB"',  '318',  '
 print('Yes it does')
 
 print()
+
+df = DataFrame.from_array(
+    [[0, 0, [],               1],
+    [0, 0, ['mayo'],          1],
+    [0, 0, ['jelly'],         4],
+    [0, 0, ['mayo', 'jelly'], 0],
+    [5, 0, [],                4],
+    [5, 0, ['mayo'],          8],
+    [5, 0, ['jelly'],         1],
+    [5, 0, ['mayo', 'jelly'], 0],
+    [0, 5, [],                5],
+    [0, 5, ['mayo'],          0],
+    [0, 5, ['jelly'],         9],
+    [0, 5, ['mayo', 'jelly'], 0],
+    [5, 5, [],                0],
+    [5, 5, ['mayo'],          0],
+    [5, 5, ['jelly'],         0],
+    [5, 5, ['mayo', 'jelly'], 0]],
+    columns = ['beef', 'pb', 'condiments', 'rating']
+)
+
+df = df.create_dummy_variables('condiments') 
+
+assert df.columns == ['beef', 'pb', 'mayo', 'jelly', 'rating']

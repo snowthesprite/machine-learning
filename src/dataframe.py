@@ -132,3 +132,34 @@ class DataFrame :
         new_columns = self.columns.copy()
         new_columns.append(interaction_key)
         return DataFrame(new_data_dict, new_columns)
+
+    def create_dummy_variables(self, initial_key) :
+        dummy_dict = {}
+        for data_list in self.data_dict[initial_key] :
+            if data_list == [] :
+                continue
+            for dummy_var in data_list :
+                dummy_dict[dummy_var] = []
+        dummy_keys = [key for key in dummy_dict]
+        dummy_keys.reverse()
+        for data_list in self.data_dict[initial_key] :
+            for key in dummy_keys :
+                if key not in data_list :
+                    dummy_dict[key].append(0)
+                else :
+                    dummy_dict[key].append(1)
+
+        new_data_dict = self.data_dict.copy()
+        del new_data_dict[initial_key]
+
+        inital_index = self.columns.index(initial_key)
+
+        new_columns = self.columns.copy()
+        del new_columns[inital_index]
+        
+        for dummy_key in dummy_keys :
+            new_data_dict[dummy_key] = dummy_dict[dummy_key]
+            new_columns.insert(inital_index, dummy_key)
+        return DataFrame(new_data_dict, new_columns)
+
+
