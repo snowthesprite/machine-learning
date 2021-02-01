@@ -76,3 +76,20 @@ for index_1 in range(len(terms) - 1) :
             df = df.create_interaction_terms(interaction_1, interaction_2)
 
 logistic = LogisticRegressor(df, 'rating', 10)
+
+print(logistic.coefficients)
+print()
+
+print(logistic.predict({'beef' : 8, 'mayo' : 1, 'beef * mayo' : 8}))
+print()
+
+print(logistic.predict({'pb' : 4, 'jelly' : 1}))
+print()
+
+print(logistic.predict({'pb' : 4, 'mayo' : 1}))
+print()
+
+print(logistic.predict({'beef' : 8, 'pb' : 4, 'mayo' : 1}))
+print()
+
+print(logistic.predict({'beef' : 8, 'mayo' : 1, 'jelly' : 1}))

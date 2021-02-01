@@ -95,3 +95,19 @@ for index_1 in range(len(terms) - 1) :
             df = df.create_interaction_terms(interaction_1, interaction_2)
 
 linear = LinearRegressor(df, 'rating')
+print(linear.coefficients)
+print()
+
+print(linear.predict({'beef' : 8, 'mayo' : 1, 'beef * mayo' : 8}))
+print()
+
+print(linear.predict({'pb' : 4, 'jelly' : 1}))
+print()
+
+print(linear.predict({'pb' : 4, 'mayo' : 1}))
+print()
+
+print(linear.predict({'beef' : 8, 'pb' : 4, 'mayo' : 1}))
+print()
+
+print(linear.predict({'beef' : 8, 'mayo' : 1, 'jelly' : 1}))
