@@ -2,7 +2,7 @@ import sys
 sys.path.append('src')
 from dataframe import DataFrame
 from logistic_regressor import LogisticRegressor
-
+from linear_regressor import LinearRegressor
 
 df = DataFrame.from_array(
     [[0, 0, [],               1],

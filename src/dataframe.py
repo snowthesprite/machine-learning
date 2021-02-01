@@ -1,7 +1,7 @@
 import csv
 class DataFrame :
-    def __init__(self, imputed_dict, column_order) :
-        self.data_dict = imputed_dict
+    def __init__(self, input_dict, column_order) :
+        self.data_dict = input_dict
         self.columns = column_order
     
     def to_array(self) :
@@ -12,18 +12,18 @@ class DataFrame :
                 data_array[row].append(self.data_dict[col_name][row])
         return data_array
 
-    def select_columns(self, imput_columns) :
+    def select_columns(self, input_columns) :
         new_df = {}
-        for key in imput_columns :
+        for key in input_columns :
             new_df[key] = self.data_dict[key]
-        return DataFrame(new_df, imput_columns)
+        return DataFrame(new_df, input_columns)
 
-    def select_rows(self, imput_rows) :
+    def select_rows(self, input_rows) :
         new_df = {}
         self_array = self.to_array()
         for col_name in self.columns :
             new_col_value = []
-            for row_key in imput_rows :
+            for row_key in input_rows :
                 new_col_value.append(self.data_dict[col_name][row_key])
             new_df[col_name] = new_col_value
         return DataFrame(new_df, self.columns)
