@@ -15,20 +15,14 @@ def show_board(locations) :
         print(row_string)
 
 def on_col(point_1, point_2) :
-    if point_1[1] - point_2[1] == 0  :
-        return True
-    return False
+    return point_1[1] == point_2[1]
 
 def on_row(point_1, point_2) :
-    if point_1[0] - point_2[0] == 0  :
-        return True
-    return False
+    return point_1[0] == point_2[0]
 
 def on_diagonal(point_1, point_2) :
     slope = (point_2[0] - point_1[0]) / (point_2[1] - point_1[1])
-    if slope == 1 or slope == -1 :
-        return True
-    return False
+    return slope == 1 or slope == -1 #I think that works
 
 def calc_cost(locations) : 
     hits = 0
