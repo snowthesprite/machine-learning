@@ -13,9 +13,7 @@ class DataFrame :
         return data_array
 
     def select_columns(self, input_columns) :
-        new_df = {}
-        for key in input_columns :
-            new_df[key] = self.data_dict[key]
+        new_df = {key : self.data_dict[key] for key in input_columns}
         return DataFrame(new_df, input_columns)
 
     def select_rows(self, input_rows) :
@@ -110,7 +108,7 @@ class DataFrame :
             for row in data :
                 all_rows.append(row)
         all_rows.pop(len(all_rows) - 1)
-        if header == True :
+        if header :
             key_names = all_rows[0]
         else :
             key_names = [str(col_num) for col_num in range(len(all_rows[0]))]
@@ -136,8 +134,6 @@ class DataFrame :
     def create_dummy_variables(self, initial_key) :
         dummy_dict = {}
         for data_list in self.data_dict[initial_key] :
-            if data_list == [] :
-                continue
             for dummy_var in data_list :
                 dummy_dict[dummy_var] = []
         dummy_keys = [key for key in dummy_dict]
@@ -149,13 +145,9 @@ class DataFrame :
                 else :
                     dummy_dict[key].append(1)
 
-        new_data_dict = self.data_dict.copy()
-        del new_data_dict[initial_key]
-
+        new_data_dict = {key : self.data_dict[key] for key in self.data_dict if key != initial_key}
         inital_index = self.columns.index(initial_key)
-
-        new_columns = self.columns.copy()
-        del new_columns[inital_index]
+        new_columns = [key for key in self.data_dict if key != initial_key]
         
         for dummy_key in dummy_keys :
             new_data_dict[dummy_key] = dummy_dict[dummy_key]

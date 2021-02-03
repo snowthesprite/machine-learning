@@ -21,9 +21,7 @@ class GradientDescent :
         return gradient
     
     def descend(self, alpha, delta, num_steps) :
-        steps = 0
-        while steps < num_steps :
+        for _ in range(num_steps) :
             gradient = self.compute_gradient(delta)
             for index in range(len(self.point)) :
                 self.point[index] = self.point[index] - alpha * gradient[index]
-            steps += 1

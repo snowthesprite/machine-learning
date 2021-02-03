@@ -44,8 +44,8 @@ print()
 print(logistic.coefficients)
 print()
 
-print(linear.predict({'beef' : 8, 'mayo' : 1, 'beef * mayo' : 8}))
-print(logistic.predict({'beef' : 8, 'mayo' : 1, 'beef * mayo' : 8}))
+print(linear.predict({'beef' : 8, 'mayo' : 1}))
+print(logistic.predict({'beef' : 8, 'mayo' : 1}))
 print()
 
 print(linear.predict({'pb' : 4, 'jelly' : 1}))

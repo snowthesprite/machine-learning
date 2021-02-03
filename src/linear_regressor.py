@@ -9,10 +9,7 @@ class LinearRegressor :
     def calculate_coefficient(self) :
         dict_data = self.data_frame.data_dict
         y_points = Matrix([[dict_data[self.depend_var][col_index]] for col_index in range(len(dict_data[self.depend_var]))])
-        independ_var = [] 
-        for x in dict_data :
-            if x != self.depend_var :
-                independ_var.append(x)
+        independ_var = [x for x in dict_data if x != self.depend_var] 
         eqn = [[1] for _ in range(len(dict_data[independ_var[0]]))]
         for row_index in range(len(dict_data[independ_var[0]])) :
             for var in independ_var :
