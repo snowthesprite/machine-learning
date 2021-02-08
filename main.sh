@@ -4,4 +4,4 @@
 #python tests/test_gradient_descent.py
 #python tests/test_logistic_regressor.py
 
-python analysis/sandwich_predictors.py
+python analysis/poly_regression.py
