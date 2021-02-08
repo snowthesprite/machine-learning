@@ -53,25 +53,19 @@ def random_optimizer(n) :
                        
 
 locations = [(0,0), (6,1), (2,2), (5,3), (4,4), (7,5), (1,6), (2,6)]
-print('The board')
-print()
-show_board(locations)
-print()
+print('The board', "\n")
+show_board(locations, "\n")
 
 print('Can calc_cost find all overlaps between queens?')
 assert calc_cost(locations) == 10, 'No it can not'
 print('Yes it can')
 
-print(random_optimizer(10))
-print()
+print(random_optimizer(10), "\n")
 
-print(random_optimizer(50))
-print()
+print(random_optimizer(50), "\n")
 
-print(random_optimizer(100))
-print()
+print(random_optimizer(100), "\n")
 
-print(random_optimizer(500))
-print()
+print(random_optimizer(500), "\n")
 
-print(random_optimizer(1000))
+print(random_optimizer(1000), "\n")

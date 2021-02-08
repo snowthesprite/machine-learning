@@ -20,8 +20,7 @@ assert ans_rounded == [-2.000], 'The rounded gradient wasnt quite right' #rounde
 minimizer.descend(alpha=0.001, delta=0.01, num_steps=1)
 point_rounded = [round(num, 3) for num in minimizer.point]
 assert point_rounded == [0.002], 'The rounded final answer wasnt quite right'
-print('Yes, it does!')
-print()
+print('Yes, it does!', "\n")
 
 print('Does GradientDescent work for a two variable function?')
 minimizer = GradientDescent(f=two_variable_function, initial_point=[0,0])
@@ -32,8 +31,7 @@ assert ans_rounded == [-2.000, 3.000], 'The rounded gradient wasnt quite right'
 minimizer.descend(alpha=0.001, delta=0.01, num_steps=1)
 point_rounded = [round(num, 3) for num in minimizer.point]
 assert point_rounded == [0.002, -0.003], 'The rounded final answer wasnt quite right'
-print('Yes, it does!')
-print()
+print('Yes, it does!', "\n")
 
 print('Does GradientDescent work for a three variable function?')
 minimizer = GradientDescent(f=three_variable_function, initial_point=[0,0,0])
@@ -44,8 +42,7 @@ assert ans_rounded == [-2.000, 3.000, -4.000], 'The rounded gradient wasnt quite
 minimizer.descend(alpha=0.001, delta=0.01, num_steps=1)
 point_rounded = [round(num, 3) for num in minimizer.point]
 assert point_rounded == [0.002, -0.003, 0.004], 'The rounded final answer wasnt quite right'
-print('Yes, it does!')
-print()
+print('Yes, it does!', "\n")
 
 print('Does GradientDescent work for a six variable function?')
 minimizer = GradientDescent(f=six_variable_function, initial_point=[0,0,0,0,0,0])
@@ -56,5 +53,4 @@ assert ans_rounded == [-2.000, 3.000, -4.000, 1.000, 2.000, 3.000], 'The rounded
 minimizer.descend(alpha=0.001, delta=0.01, num_steps=1)
 point_rounded = [round(num, 3) for num in minimizer.point]
 assert point_rounded == [0.002, -0.003, 0.004, -0.001, -0.002, -0.003], 'The rounded final answer wasnt quite right'
-print('Yes, it does!')
-print()
+print('Yes, it does!', "\n")

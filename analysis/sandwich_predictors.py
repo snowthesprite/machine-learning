@@ -39,26 +39,20 @@ for index_1 in range(len(terms) - 1) :
 linear = LinearRegressor(df, 'rating')
 logistic = LogisticRegressor(df, 'rating', 10)
 
-print(linear.coefficients)
-print()
-print(logistic.coefficients)
-print()
+print(linear.coefficients, "\n")
+print(logistic.coefficients, "\n")
 
 print(linear.predict({'beef' : 8, 'mayo' : 1}))
-print(logistic.predict({'beef' : 8, 'mayo' : 1}))
-print()
+print(logistic.predict({'beef' : 8, 'mayo' : 1}), "\n")
 
 print(linear.predict({'pb' : 4, 'jelly' : 1}))
-print(logistic.predict({'pb' : 4, 'jelly' : 1}))
-print()
+print(logistic.predict({'pb' : 4, 'jelly' : 1}), "\n")
 
 print(linear.predict({'pb' : 4, 'mayo' : 1}))
-print(logistic.predict({'pb' : 4, 'mayo' : 1}))
-print()
+print(logistic.predict({'pb' : 4, 'mayo' : 1}), "\n")
 
 print(linear.predict({'beef' : 8, 'pb' : 4, 'mayo' : 1}))
-print(logistic.predict({'beef' : 8, 'pb' : 4, 'mayo' : 1}))
-print()
+print(logistic.predict({'beef' : 8, 'pb' : 4, 'mayo' : 1}), "\n")
 
 print(linear.predict({'beef' : 8, 'mayo' : 1, 'jelly' : 1}))
 print(logistic.predict({'beef' : 8, 'mayo' : 1, 'jelly' : 1}))
