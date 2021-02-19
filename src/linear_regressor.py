@@ -10,11 +10,12 @@ class LinearRegressor :
         dict_data = self.data_frame.data_dict
         y_points = Matrix([[dict_data[self.depend_var][col_index]] for col_index in range(len(dict_data[self.depend_var]))])
         independ_var = [x for x in dict_data if x != self.depend_var] 
-        eqn = [[1] for _ in range(len(dict_data[independ_var[0]]))]
-        for row_index in range(len(dict_data[independ_var[0]])) :
+        eqn = [[1] for _ in range(len(dict_data[self.depend_var]))]
+        for row_index in range(len(dict_data[self.depend_var])) :
             for var in independ_var :
                 eqn[row_index].append(dict_data[var][row_index])
         line_eqn = Matrix(eqn)
+        #print(line_eqn.elements)
         t_line_eqn = line_eqn.transpose()
         t_n_line = t_line_eqn @ line_eqn
         inverse_t_n_line = t_n_line.inverse()
@@ -40,7 +41,7 @@ class LinearRegressor :
         val = [1]
         for x in predictor.values() :
             val.append(x)
-        coef_val = [self.coefficients[key] for key in predictor_keys]
+        coef_val = [self.coefficients[key] if key in list(self.coefficients.keys()) else 0 for key in predictor_keys]
         y = 0
         for index in range(len(val)) :
             y += coef_val[index] * val[index]

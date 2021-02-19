@@ -4,4 +4,4 @@
 #python tests/test_gradient_descent.py
 #python tests/test_logistic_regressor.py
 
-python analysis/8_queens_steepest_descent_optimizer.py
+python analysis/poly_regressor.py
