@@ -34,7 +34,24 @@ df = DataFrame.from_array(
 df = df.create_interaction_terms('beef', 'pb')
 
 regressor = LogisticRegressor(df, 'rating', 10)
-print(regressor.coefficients)
-print(regressor.predict({'beef' : 5, 'pb' : 0}))
-print(regressor.predict({'beef' : 12, 'pb' : 0}))
-print(regressor.predict({'beef' : 5, 'pb' : 5, 'beef * pb' : 25}))
+print('Coefficients:', regressor.coefficients)
+print('Beef: 5, Pb: 0, Rating:', regressor.predict({'beef' : 5, 'pb' : 0}))
+print('Beef: 12, Pb: 0, Rating:', regressor.predict({'beef' : 12, 'pb' : 0}))
+print('Beef: 5, Pb: 5, Rating:', regressor.predict({'beef' : 5, 'pb' : 5, 'beef * pb' : 25}), "\n")
+
+df = DataFrame.from_array(
+    [[10, 0.05],
+    [100, 0.35],
+    [1000, 0.95]], ['# of hours', 'prob of winning']
+)
+
+regressor = LogisticRegressor(df, 'prob of winning')
+
+print('Game Coefficents:', regressor.coefficients)
+
+print('Hours Played: 500, Chance of winning:', regressor.predict({'# of hours' : 500}), "\n")
+
+b_0 = regressor.coefficients['constant']
+b_1 = regressor.coefficients['# of hours']
+
+print('avg players practice hours:', -b_0/b_1)

@@ -3,7 +3,7 @@ from dataframe import DataFrame
 import math
 
 class LogisticRegressor (LinearRegressor):
-    def __init__(self, data_frame, dependent_variable, upper_bound) :
+    def __init__(self, data_frame, dependent_variable, upper_bound = 1) :
         self.depend_var = dependent_variable
         self.up_bound = upper_bound
         self.data_frame = self.transform(data_frame)
