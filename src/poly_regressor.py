@@ -1,7 +1,6 @@
 import sys
 sys.path.append('src')
 from dataframe import DataFrame
-from matrix import Matrix
 from linear_regressor import LinearRegressor
 
 class PolynomialRegressor (LinearRegressor) :
@@ -14,15 +13,15 @@ class PolynomialRegressor (LinearRegressor) :
 
     def fit (self, dataframe, dependent_variable) :
         self.data_frame = dataframe
+        dict_data = self.data_frame.data_dict
         self.depend_var = dependent_variable
+        independ_var = [var for var in dict_data if var != self.depend_var][0]
         if self.degree == 0 :
-            self.data_frame = DataFrame({self.depend_var : self.data_frame.data_dict[self.depend_var]}, [self.depend_var])
+            self.data_frame = DataFrame({self.depend_var : dict_data[self.depend_var]}, [self.depend_var])
         for degree in range(1, self.degree) :
-            col_1 = 'x'
-            col_2 = 'x'
-            for _ in range(1, degree) :
-                col_1 = col_1 + ' * x'
-            self.data_frame = self.data_frame.create_interaction_terms(col_1, col_2)
+            col = independ_var + '^' + str(degree + 1)
+            col_val = [dict_data[independ_var][index] ** (degree + 1) for index in range(len(dict_data[independ_var]))]
+            self.data_frame = self.data_frame.add_data(col, col_val)
         self.coefficients = self.calculate_coefficient()
 
 df = DataFrame.from_array(

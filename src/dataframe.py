@@ -154,4 +154,11 @@ class DataFrame :
             new_columns.insert(inital_index, dummy_key)
         return DataFrame(new_data_dict, new_columns)
 
+    def add_data(self, key, data) : 
+        new_data_dict = self.data_dict.copy()
+        new_columns = self.columns.copy()
+        new_data_dict[key] = data
+        new_columns.append(key)
+        return DataFrame(new_data_dict, new_columns)
+
 

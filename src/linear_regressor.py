@@ -30,13 +30,18 @@ class LinearRegressor :
         return finished_dict
     
     def predict(self, predictor) :
-        predictor_keys = [key for key in predictor]
         #creates interaction terms if they exist
-        for key_1 in predictor_keys :
-            for key_2 in predictor_keys :
-                if key_1 + " * " + key_2 in self.data_frame.columns :
-                    predictor_keys.append(key_1 + " * " + key_2)
-                    predictor[key_1 + " * " + key_2] = predictor[key_1] * predictor[key_2]
+        for key in self.data_frame.columns :
+            if '*' in key :
+                sub_keys = key.split(' * ')
+                predictor[key] = 1
+                for key_1 in sub_keys :
+                    predictor[key] = predictor[key] * predictor[key_1]
+            if '^' in key :
+                key_n_pwr = key.split('^')
+                predictor[key] = predictor[key_n_pwr[0]] ** int(key_n_pwr[1])
+
+        predictor_keys = [key for key in predictor]
         predictor_keys.insert(0, 'constant')
         val = [1]
         for x in predictor.values() :
