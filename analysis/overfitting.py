@@ -50,7 +50,7 @@ print('Testing RSS:', find_RSS(testing_data, linear), "\n")
 print('Quadratic')
 print('Training RSS:', find_RSS(training_data, quad))
 print('Testing RSS:', find_RSS(testing_data, quad), "\n")
-
+#'''
 print('Cubic')
 print('Training RSS:', find_RSS(training_data, cube))
 print('Testing RSS:', find_RSS(testing_data, cube), "\n")
