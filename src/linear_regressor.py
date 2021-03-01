@@ -22,31 +22,27 @@ class LinearRegressor :
         solved_line_eqn = t_line_eqn @ y_points
         solved_line_eqn = inverse_t_n_line @ solved_line_eqn
         done = solved_line_eqn.transpose().elements[0]
-        for x in range(len(done)) :
-            done[x] = round(done[x], 8)
         finished_dict = {'constant' : done[0]}
         for index in range(len(independ_var)) :
             finished_dict[independ_var[index]] = done[index + 1]
         return finished_dict
     
     def predict(self, predictor) :
+        predict = predictor.copy()
         #creates interaction terms if they exist
         for key in self.data_frame.columns :
             if '*' in key :
                 sub_keys = key.split(' * ')
-                predictor[key] = 1
+                predict[key] = 1
                 for key_1 in sub_keys :
-                    predictor[key] = predictor[key] * predictor[key_1]
-            if '^' in key :
-                key_n_pwr = key.split('^')
-                predictor[key] = predictor[key_n_pwr[0]] ** int(key_n_pwr[1])
-
-        predictor_keys = [key for key in predictor]
-        predictor_keys.insert(0, 'constant')
+                    predict[key] = predict[key] * predict[key_1]
+                
+        predict_keys = [key for key in predict]
+        predict_keys.insert(0, 'constant')
         val = [1]
-        for x in predictor.values() :
+        for x in predict.values() :
             val.append(x)
-        coef_val = [self.coefficients[key] if key in list(self.coefficients.keys()) else 0 for key in predictor_keys]
+        coef_val = [self.coefficients[key] if key in list(self.coefficients.keys()) else 0 for key in predict_keys]
         y = 0
         for index in range(len(val)) :
             y += coef_val[index] * val[index]

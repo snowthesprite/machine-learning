@@ -2,6 +2,10 @@ import sys
 sys.path.append('src')
 from poly_regressor import *
 
+df = DataFrame.from_array(
+    [(0,1), (1,2), (2,5), (3,10), (4,20), (5,30)],
+    columns = ['x', 'y']
+)
 
 print('Does the PolynomialRegressor work?')
 
