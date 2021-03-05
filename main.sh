@@ -5,4 +5,4 @@
 #python tests/test_logistic_regressor.py
 #python tests/test_poly_regressor.py
 
-python analysis/overfitting.py
+python analysis/signal_separation.py
