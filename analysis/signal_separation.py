@@ -38,7 +38,9 @@ df = DataFrame.from_array(new_data, columns)
 
 regressor = LinearRegressor(df, 'y')
 
-#'''
+print(regressor.coefficients)
+
+'''
 import matplotlib.pyplot as plt
 plt.style.use('bmh')
 

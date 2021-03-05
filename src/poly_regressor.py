@@ -1,5 +1,3 @@
-import sys
-sys.path.append('src')
 from dataframe import DataFrame
 from linear_regressor import LinearRegressor
 
