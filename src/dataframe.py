@@ -101,12 +101,18 @@ class DataFrame :
         return DataFrame.from_array(data_array, self.columns)
         
     @classmethod
-    def from_csv(self, path_to_csv, header) :
+    def from_csv(self, path_to_csv, header = True, data_types = {}, parser = None) :
         all_rows = []
         with open(path_to_csv, "r") as file:
-            data = csv.reader(file, quotechar='|', skipinitialspace = True)
+            if parser == None :
+                data = csv.reader(file, quotechar='|', skipinitialspace = True)
+            else :
+                data = csv.reader(file, quotechar='|', skipinitialspace = True, delimiter = '\t')
             for row in data :
-                all_rows.append(row)
+                if parser == None :
+                    all_rows.append(row)
+                else :
+                    all_rows.append(parser(row[0]))
         all_rows.pop(len(all_rows) - 1)
         if header :
             key_names = all_rows[0]
@@ -116,8 +122,20 @@ class DataFrame :
         new_df = {}
         for key in key_names :
             index = key_names.index(key)
-            key_data = [row[index] for row in all_rows]
+            if key in data_types :
+                key_type = data_types[key]
+            else :
+                key_type = (lambda a : a)
+            key_data = []
+            for row in all_rows :
+                #print(row)
+                if (key_type == int or key_type == float) and row[index] == '' : 
+                    key_data.append(None)
+                else :
+                    key_data.append(key_type(row[index]))
+            #key_data = [None if (key_type == int or key_type == float) and row[index] == '' else key_type(row[index]) for row in all_rows]
             new_df[key] = key_data
+
         return DataFrame(new_df, key_names)
 
     def create_interaction_terms(self, col_1, col_2) :
