@@ -8,7 +8,7 @@ def parse_line(line):
     quote_symbol = None
     
     for char in line:
-        if char == quote_symbol or (quote_symbol == None and char == '"' or quote_symbol == None and char == "'") :
+        if char == quote_symbol or quote_symbol == None and char == '"' or quote_symbol == None and char == "'" :
             quote_symbol = char
             inside_quotes = not inside_quotes
 
