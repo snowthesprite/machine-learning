@@ -26,17 +26,22 @@ class DataFrame :
             new_df[col_name] = new_col_value
         return DataFrame(new_df, self.columns)
             
-    def apply(self, wanted_col, funct) :
+    def apply(self, wanted_col, funct, new_name = None) :
         new_df = {}
+        new_columns = [col if (col != wanted_col or new_name == None) else new_name for col in self.columns ]
         for col in self.columns :
             col_value = []
             for row_val in self.data_dict[col] :
                 if col == wanted_col :
+                    print()
                     col_value.append(funct(row_val))
                 else :
                     col_value.append(row_val)
-            new_df[col] = col_value
-        return DataFrame(new_df, self.columns)
+            if new_name == None or col != wanted_col :
+                new_df[col] = col_value
+            else :
+                new_df[new_name] = col_value
+        return DataFrame(new_df, new_columns)
 
     @classmethod 
     def from_array(self, arr, columns) :
@@ -127,13 +132,16 @@ class DataFrame :
             else :
                 key_type = (lambda a : a)
             key_data = []
+            ''''
             for row in all_rows :
                 #print(row)
-                if (key_type == int or key_type == float) and row[index] == '' : 
+                #if (key_type == int or key_type == float) and row[index] == '' : 
+                if row[index] == '' :
                     key_data.append(None)
                 else :
                     key_data.append(key_type(row[index]))
-            #key_data = [None if (key_type == int or key_type == float) and row[index] == '' else key_type(row[index]) for row in all_rows]
+            #'''
+            key_data = [None if row[index] == '' else key_type(row[index]) for row in all_rows]
             new_df[key] = key_data
 
         return DataFrame(new_df, key_names)
@@ -172,11 +180,11 @@ class DataFrame :
             new_columns.insert(inital_index, dummy_key)
         return DataFrame(new_data_dict, new_columns)
 
-    def add_data(self, key, data) : 
+    def add_data(self, key, data, new_loc = 999) : 
         new_data_dict = self.data_dict.copy()
         new_columns = self.columns.copy()
         new_data_dict[key] = data
-        new_columns.append(key)
+        new_columns.insert(new_loc, key)
         return DataFrame(new_data_dict, new_columns)
 
 
