@@ -33,7 +33,6 @@ class DataFrame :
             col_value = []
             for row_val in self.data_dict[col] :
                 if col == wanted_col :
-                    print()
                     col_value.append(funct(row_val))
                 else :
                     col_value.append(row_val)
