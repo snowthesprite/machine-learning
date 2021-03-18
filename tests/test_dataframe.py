@@ -115,3 +115,61 @@ assert df.to_array() == [[0, 0, 0, 0, 1],
 [5, 5, 1, 1, 0]], 'The data isnt right'
 
 print('Yes it does', "\n")
+
+print('Testing various things work....') #Assign 70
+
+df = DataFrame.from_array(
+    [['Kevin', 'Fray', 5],
+    ['Charles', 'Trapp', 17],
+    ['Anna', 'Smith', 13],
+    ['Sylvia', 'Mendez', 9]],
+    columns = ['firstname', 'lastname', 'age']
+)
+
+assert df.select_columns(['firstname','age']).to_array() == [['Kevin', 5],
+['Charles', 17],
+['Anna', 13],
+['Sylvia', 9]]
+
+assert df.select_rows_where(lambda row: row['age'] > 10).to_array() == [['Charles', 'Trapp', 17],
+['Anna', 'Smith', 13]]
+
+assert df.order_by('firstname').to_array() == [['Anna', 'Smith', 13],
+['Charles', 'Trapp', 17],
+['Kevin', 'Fray', 5],
+['Sylvia', 'Mendez', 9]]
+
+assert df.order_by('firstname', ascending=False).to_array() == [['Sylvia', 'Mendez', 9],
+['Kevin', 'Fray', 5],
+['Charles', 'Trapp', 17],
+['Anna', 'Smith', 13]]
+
+assert df.select_columns(['firstname','age']).select_rows_where(lambda row: row['age'] > 10).order_by('age').to_array() == [['Anna', 13],
+['Charles', 17]]
+
+print('... they do')
+
+print('Testing group by and aggregate')
+
+df = DataFrame.from_array(
+    [
+        ['Kevin Fray', 52, 100],
+        ['Charles Trapp', 52, 75],
+        ['Anna Smith', 52, 50],
+        ['Sylvia Mendez', 52, 100],
+        ['Kevin Fray', 53, 80],
+        ['Charles Trapp', 53, 95],
+        ['Anna Smith', 53, 70],
+        ['Sylvia Mendez', 53, 90],
+        ['Anna Smith', 54, 90],
+        ['Sylvia Mendez', 54, 80],
+    ],
+    columns = ['name', 'assignmentId', 'score']
+)
+
+assert df.group_by('name').to_array() == [
+    ['Kevin Fray', [52, 53], [100, 80]],
+    ['Charles Trapp', [52, 53], [75, 95]],
+    ['Anna Smith', [52, 53, 54], [50, 70, 90]],
+    ['Sylvia Mendez', [52, 53, 54], [100, 90, 80]],
+]

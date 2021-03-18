@@ -69,7 +69,7 @@ class DataFrame :
                     new_df[key].append(value)
         return DataFrame(new_df, self.columns)
 
-    def order_by(self, order, ascending) :
+    def order_by(self, order, ascending = True) :
         arr = self.to_array()
         location = self.columns.index(order)
         if type(self.data_dict[order][0]) == int :
@@ -185,5 +185,21 @@ class DataFrame :
         new_data_dict[key] = data
         new_columns.insert(new_loc, key)
         return DataFrame(new_data_dict, new_columns)
+
+    def group_by(self, catagory) :
+        sorted_cata = list({element : [] for element in self.data_dict[catagory]}.keys())
+        new_df = {col : [] for col in self.columns}
+        new_df[catagory] = sorted_cata
+        for element in sorted_cata :
+            require = (lambda a : a[catagory] == element)
+            where = self.select_rows_where(require).data_dict
+            for col in self.columns :
+                if col == catagory :
+                    continue
+                new_df[col].append(where[col])
+        return DataFrame(new_df, self.columns)
+            
+                
+            
 
 
