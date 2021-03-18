@@ -198,6 +198,32 @@ class DataFrame :
                     continue
                 new_df[col].append(where[col])
         return DataFrame(new_df, self.columns)
+    
+    def aggregate(self, colname, how) :
+        df_array = self.to_array()
+        col_index = self.columns.index(colname)
+        
+        if how == 'count' :
+            how_funct = (lambda a : len(a) if type(a) == list else 0)
+        elif how == 'min' :
+            how_funct = (lambda a : min(a) if type(a) == list else None)
+        elif how == 'max' :
+            how_funct = (lambda a : max(a) if type(a) == list else None)
+        elif how == 'sum' :
+            how_funct = (lambda a : sum(a) if type(a) == list else a)
+        elif how == 'avg' :
+            how_funct = (lambda a : (sum(a)/len(a)) if type(a) == list else a)
+        else :
+            print('Unknown command')
+            return
+        
+        for row_index in range(len(df_array)) :
+            new_val = how_funct(df_array[row_index][col_index])
+            df_array[row_index][col_index] = new_val
+        
+        return DataFrame.from_array(df_array, self.columns)
+
+
             
                 
             
