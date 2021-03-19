@@ -147,7 +147,7 @@ assert df.order_by('firstname', ascending=False).to_array() == [['Sylvia', 'Mend
 assert df.select_columns(['firstname','age']).select_rows_where(lambda row: row['age'] > 10).order_by('age').to_array() == [['Anna', 13],
 ['Charles', 17]]
 
-print('... they do')
+print('... they do', "\n")
 
 print('Testing group by and aggregate')
 
@@ -209,3 +209,20 @@ assert df.group_by('name').aggregate('score', 'avg').to_array() == [
     ['Sylvia Mendez', [52, 53, 54], 90],
 ]
 print('Everything works!', "\n")
+
+print('Does Query work?')
+
+df = DataFrame.from_array(
+    [['Kevin', 'Fray', 5],
+    ['Charles', 'Trapp', 17],
+    ['Anna', 'Smith', 13],
+    ['Sylvia', 'Mendez', 9]],
+    columns = ['firstname', 'lastname', 'age']
+)
+
+assert df.query('SELECT firstname, age').to_array() == [['Kevin', 5],
+['Charles', 17],
+['Anna', 13],
+['Sylvia', 9]]
+
+print('Yes it does', "\n")

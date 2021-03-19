@@ -199,8 +199,9 @@ class DataFrame :
                 new_df[col].append(where[col])
         return DataFrame(new_df, self.columns)
     
-    def aggregate(self, colname, how) :
+    def aggregate(self, colname, how, new_name = None) :
         df_array = self.to_array()
+        df_columns = self.columns.copy()
         col_index = self.columns.index(colname)
         
         if how == 'count' :
@@ -220,12 +221,17 @@ class DataFrame :
         for row_index in range(len(df_array)) :
             new_val = how_funct(df_array[row_index][col_index])
             df_array[row_index][col_index] = new_val
+        if new_name != None :
+            df_columns[col_index] = new_name
         
-        return DataFrame.from_array(df_array, self.columns)
-
-
-            
-                
-            
-
-
+        return DataFrame.from_array(df_array, df_columns)
+    
+    def query(self, query) :
+        split_query = query.split(' ')
+        for q_id in range(len(split_query)) :
+            if ',' in split_query[q_id] :
+                split_query[q_id] = split_query[q_id].replace(',','')
+        if split_query[0] != 'SELECT' :
+            print('Unknown command')
+            return
+        return self.select_columns(split_query[1:])
