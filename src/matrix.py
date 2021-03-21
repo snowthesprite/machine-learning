@@ -9,21 +9,15 @@ class Matrix :
         return Matrix(copied_elemenets)
 
     def add(self, matrix) :
-        new_elements = [[] for blank in range(self.num_rows)]
-        for rows in range(self.num_rows)  :
-            for column in range(self.num_cols) : 
-                new_elements[rows].append(self.elements[rows][column] + matrix.elements[rows][column])
+        new_elements = [[self.elements[row_index][col_index] + matrix.elements[row_index][col_index] for col_index in range(self.num_cols)] for row_index in range(self.num_rows)]
         return Matrix(new_elements)
 
     def subtract(self, matrix) :
-        new_elements = [[] for blank in range(self.num_rows)]
-        for rows in range(self.num_rows) :
-            for column in range(self.num_cols) : 
-                new_elements[rows].append(self.elements[rows][column] - matrix.elements[rows][column])
+        new_elements = [[self.elements[row_index][col_index] - matrix.elements[row_index][col_index] for col_index in range(self.num_cols)] for row_index in range(self.num_rows)]
         return Matrix(new_elements)
 
     def matrix_multiply(self, matrix) :
-        new_elements = [[] for blank in range(self.num_rows)]
+        new_elements = [[] for _ in range(self.num_rows)]
         for rows in range(self.num_rows) :
             for matrix_column in range(matrix.num_cols) :
                 end_number = 0
@@ -33,17 +27,11 @@ class Matrix :
         return Matrix(new_elements)
         
     def scalar_multiply(self, scalar) :
-        new_elements = [[] for blank in range(self.num_rows)]
-        for rows in range(self.num_rows) :
-            for num in self.elements[rows] :
-                new_elements[rows].append(round(num * scalar,1))
+        new_elements = [[round(num * scalar,1) for num in self.elements[row_index]] for row_index in range(self.num_rows)]
         return Matrix(new_elements)
 
     def transpose(self) :
-        new_elements = [[] for blank in range(self.num_cols)]
-        for column in range(self.num_cols) :
-            for rows in range(self.num_rows) :
-                new_elements[column].append(self.elements[rows][column])
+        new_elements = [[self.elements[row_index][col_index] for row_index in range(self.num_rows)] for col_index in range(self.num_cols)]
         return Matrix(new_elements)
 
     def is_equal(self, matrix) : 
@@ -69,62 +57,53 @@ class Matrix :
 
     def normalize_row(self, row_index) :
         copy = self.copy()
-        run = False
+        normalizer = None
         for column in range(copy.num_cols) :
-            if copy.elements[row_index][column] != 0 and not run:
+            if copy.elements[row_index][column] != 0 :
                 normalizer = copy.elements[row_index][column]
-                run = True
-        if run :
+                break
+        if normalizer != None :
             for column in range(copy.num_cols) :
                 copy.elements[row_index][column] = copy.elements[row_index][column] / normalizer
         return Matrix(copy.elements)
 
     def clear_below(self, row_index) :
         copy = self.copy()
-        run = False
+        non_zero = None
         for column in range(copy.num_cols) :
-            if copy.elements[row_index][column] != 0 and not run:
+            if copy.elements[row_index][column] != 0 :
                 non_zero = copy.elements[row_index][column]
                 col_index = column
-                run = True
-        if run :
-            if non_zero < 0 :
-                sign = -1
-            elif non_zero > 0 :
-                sign = 1
-            for rows in range(row_index, copy.num_rows) :
-                while copy.elements[rows][col_index] != 0 and rows != row_index :
-                    cancleator = copy.elements[rows][col_index] / copy.elements[row_index][col_index]
-                    if copy.elements[rows][col_index] < 0 and sign * cancleator <= 0 :
-                        sign = sign * -1
-                    elif copy.elements[rows][col_index] > 0 and sign * cancleator >= 0 :
-                        sign = sign * -1
-                    for column in range(copy.num_cols) :
-                        copy.elements[rows][column] = copy.elements[rows][column] + (copy.elements[row_index][column] * sign * cancleator)
+                break
+        if non_zero == None :
+            return Matrix(copy.elements)
+        sign = int(non_zero/abs(non_zero))
+        for rows in range(row_index, copy.num_rows) :
+            cancleator = copy.elements[rows][col_index] / copy.elements[row_index][col_index]
+            while copy.elements[rows][col_index] != 0 and rows != row_index :
+                if (copy.elements[rows][col_index] < 0 and sign * cancleator <= 0) or (copy.elements[rows][col_index] > 0 and sign * cancleator >= 0) :
+                    sign = sign * -1
+                for column in range(copy.num_cols) :
+                    copy.elements[rows][column] = copy.elements[rows][column] + (copy.elements[row_index][column] * sign * cancleator)
         return Matrix(copy.elements)
 
     def clear_above(self, row_index) :
         copy = self.copy()
-        run = False
-        for column in range(copy.num_cols) :
-            if copy.elements[row_index][column] != 0 and not run:
-                non_zero = copy.elements[row_index][column]
-                col_index = column
-                run = True
-        if run :
-            if non_zero < 0 :
-                sign = -1
-            elif non_zero > 0 :
-                sign = 1
-            for rows in range(0, row_index) :
-                cancleator = copy.elements[rows][col_index] / copy.elements[row_index][col_index]
-                while copy.elements[rows][col_index] != 0 and rows != row_index :
-                    if copy.elements[rows][col_index] < 0 and sign * cancleator <= 0 :
-                        sign = sign * -1
-                    elif copy.elements[rows][col_index] > 0 and sign * cancleator >= 0 :
-                        sign = sign * -1
-                    for column in range(copy.num_cols) :
-                        copy.elements[rows][column] = copy.elements[rows][column] + (copy.elements[row_index][column] * sign * cancleator)
+        sign = None
+        for col in range(copy.num_cols) :
+            if copy.elements[row_index][col] != 0 :
+                sign = int(copy.elements[row_index][col]/abs(copy.elements[row_index][col]))
+                col_index = col
+                break
+        if sign == None :
+            return Matrix(copy.elements)
+        for rows in range(0, row_index) :
+            cancleator = copy.elements[rows][col_index] / copy.elements[row_index][col_index]
+            while copy.elements[rows][col_index] != 0 and rows != row_index :
+                if (copy.elements[rows][col_index] < 0 and sign * cancleator <= 0) or (copy.elements[rows][col_index] > 0 and sign * cancleator >= 0) :
+                    sign = sign * -1
+                for column in range(copy.num_cols) :
+                    copy.elements[rows][column] = copy.elements[rows][column] + (copy.elements[row_index][column] * sign * cancleator)
         return Matrix(copy.elements)
 
     def rref(self) :
@@ -186,46 +165,39 @@ class Matrix :
         number_of_swaps = 0
         product_of_scalars = 1
         for column in range(copy.num_cols) :
-            ran = False
             if copy.get_pivot_row(column) != None and copy.get_pivot_row(column) != row_index :
                 copy = copy.swap_rows(copy.get_pivot_row(column), row_index)
-            if copy.get_pivot_row(column) != None : 
-                ran = True
+            if copy.get_pivot_row(column) == None : 
+                continue
             #to find normalizer
-            run = False
             for column in range(copy.num_cols) :
-                if copy.elements[row_index][column] != 0 and not run:
+                if copy.elements[row_index][column] != 0 :
                     normalizer = copy.elements[row_index][column]
-                    run = True
+                    break
             product_of_scalars = product_of_scalars * normalizer
             copy = copy.normalize_row(row_index)
             copy = copy.clear_below(row_index)
             copy = copy.clear_above(row_index)
-            if ran :
-                row_index += 1 
+            row_index += 1 
             if row_index >= copy.num_rows :
                 row_index = 0
         for rows in range(copy.num_rows) :
             for column in range(copy.num_cols) : 
                 if rows == column and copy.elements[rows][column] != 1 :
-                    ran = False
                     for rows2 in range(copy.num_rows) :
                         if copy.elements[rows2][column] == 1 :
                             number_of_swaps += 1
                             copy = copy.swap_rows(rows,rows2)
-                            ran = True
-                        elif not ran :
-                            return 0
+                            continue
+                        return 0
                 elif rows != column and copy.elements[rows][column] != 0 :
                     return 0
         return ((-1) ** number_of_swaps) * product_of_scalars
 
     def exponent(self, expo) :
         copy = self.copy()
-        current_expo = 1
-        while current_expo < expo :
+        for current_expo in range(1, expo) :
             copy = self.matrix_multiply(copy)
-            current_expo += 1
         return copy
 
     def __add__(self, other) :

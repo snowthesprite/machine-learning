@@ -121,7 +121,7 @@ print('Did normalize_row normalize the right row?')
 assert A.elements == [[1, 2, 3], [0, 1, 2], [2, 6, 8]], 'No, it did not'
 print('Yes, it did')
 print('')
-
+print(A.elements)
 A = A.clear_below(0)
 
 print('Did clear_below correctly clear the rows below the pivot?')
