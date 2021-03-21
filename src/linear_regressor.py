@@ -36,14 +36,9 @@ class LinearRegressor :
                 predict[key] = 1
                 for key_1 in sub_keys :
                     predict[key] = predict[key] * predict[key_1]
-                
-        predict_keys = [key for key in predict]
-        predict_keys.insert(0, 'constant')
-        val = [1]
-        for x in predict.values() :
-            val.append(x)
-        coef_val = [self.coefficients[key] if key in list(self.coefficients.keys()) else 0 for key in predict_keys]
+        predict['constant'] = 1
         y = 0
-        for index in range(len(val)) :
-            y += coef_val[index] * val[index]
+        for key in predict.keys() :
+            y += self.coefficients[key] * predict[key]
         return self.funct(y)
+        

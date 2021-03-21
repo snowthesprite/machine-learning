@@ -7,4 +7,4 @@
 
 #python analysis/signal_separation.py
 
-python kaggle/titanic/titanic_test.py
+#python kaggle/titanic/titanic_test.py

@@ -25,7 +25,11 @@ regressor = LinearRegressor(df, dependent_variable = 'taste rating')
 
 print('Does all the linear_regressor stuff work')
 
-assert regressor.coefficients == {'constant': 0.19252336, 'scoops of chocolate': -0.05981308, 'scoops of vanilla': 0.13271028}, 'No, coefficients does not work'
+reg_coeff = regressor.coefficients.copy()
+for (key, value) in reg_coeff.items() :
+    reg_coeff[key] = round(value,8)
+
+assert reg_coeff == {'constant': 0.19252336, 'scoops of chocolate': -0.05981308, 'scoops of vanilla': 0.13271028}, 'No, coefficients does not work'
 
 assert round(regressor.predict({'scoops of chocolate': 2, 'scoops of vanilla': 3}), 8) == 0.47102804, 'No, predict does not work'
 
@@ -55,3 +59,5 @@ regressor = LinearRegressor(df, 'rating')
 print(regressor.coefficients)
 print(regressor.predict({'beef' : 5, 'pb' : 5, 'beef * pb' : 25}))
 print(regressor.predict({'beef' : 5, 'pb' : 0}))
+
+print()
