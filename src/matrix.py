@@ -175,9 +175,7 @@ class Matrix :
                     normalizer = copy.elements[row_index][column]
                     break
             product_of_scalars = product_of_scalars * normalizer
-            copy = copy.normalize_row(row_index)
-            copy = copy.clear_below(row_index)
-            copy = copy.clear_above(row_index)
+            copy = copy.normalize_row(row_index).clear_below(row_index).clear_above(row_index)
             row_index += 1 
             if row_index >= copy.num_rows :
                 row_index = 0
