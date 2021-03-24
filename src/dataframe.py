@@ -90,7 +90,16 @@ class DataFrame :
                 if kind : 
                     compare = num < data_array[i][location]
                 else :
-                    compare = num < data_array[i][location][0]
+                    index = 0
+                    while index < len(row[location]) and index < len(data_array[i][location]) :
+                        char_1 = row[location][index]
+                        char_2 = data_array[i][location][index]
+                        #print(row[location], data_array[i][location])
+                       # print(char_1, char_2)
+                        if char_1 != char_2 :
+                            compare = char_1 < char_2
+                            break
+                        index+=1
                 if compare :
                     data_array.insert(i, row)
                     run = True
@@ -224,31 +233,38 @@ class DataFrame :
             return
 
         queries = {'SELECT' : (lambda a,b,c : a.select_columns(split_query[b:c])),
-                   'ORDER_BY' : (lambda a, b, c : (a.order_by(split_query[index-1],split_query[index]) for index in range(c-1,b,-2)))}
+                   'ORDER_BY' : (lambda a, b, c : a.order_by(split_query[b-2],split_query[c-1]))}
 
-        query_order = [['SELECT',1,len(split_query)]]
+        query_order = [['SELECT',0,len(split_query),(None,None,True)]]
 
         if 'ORDER BY' in query :
             split_query.insert(split_query.index('ORDER'), 'ORDER BY')
             split_query.remove('ORDER')
             split_query.remove('BY')
-            query_order.insert(0,['ORDER_BY',split_query.index('ORDER BY'), len(split_query)])
+            query_order.insert(0,['ORDER_BY',split_query.index('ORDER BY'), len(split_query), (-2, True,False)])
             query_order = self.sort_queries(query_order)
-            
+
         df = DataFrame(self.data_dict, self.columns)
-        for (query_name, start, stop) in query_order :
-            df = queries[query_name](df, start, stop)
+        for (query_name, start, stop, loop_controls) in query_order :
+            start = start+1
+            if loop_controls[2] : 
+                df = queries[query_name](df, start, stop)
+                continue
+            if loop_controls[1] :
+                start, stop = stop, start
+            for index in range(start, stop, loop_controls[0]) :
+                df = queries[query_name](df, index, index)
         
         return df
 
     def sort_queries(self, query_order) :
         new_order = []
-        for (query, start, stop) in query_order :
+        for (query, start, stop, loop_controls) in query_order :
             current_stop = stop
-            for (_, start_2, stop_2) in query_order :
+            for (_, start_2, __, ___) in query_order :
                 if current_stop > start_2 and start < start_2 :
                     current_stop = start_2
-            new_order.append([query, start, current_stop])
+            new_order.append([query, start, current_stop, loop_controls])
         return new_order
 
 
