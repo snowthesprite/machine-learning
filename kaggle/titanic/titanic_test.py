@@ -127,3 +127,7 @@ print('Yes it does!', "\n")
 #print(df.group_by('CabinType').aggregate('Survived', 'avg', 'meanSurvival').aggregate('PassengerId', 'count', 'count').select_columns(['CabinType', 'meanSurvival', 'count']).data_dict)
 
 #print(df.group_by('Embarked').aggregate('Survived', 'avg', 'meanSurvival').aggregate('PassengerId', 'count', 'count').select_columns(['Embarked', 'meanSurvival', 'count']).data_dict)
+
+#print(df.group_by('Embarked').aggregate('Survived', 'avg', 'meanSurvival').aggregate('PassengerId', 'count', 'count').select_columns(['Embarked', 'meanSurvival', 'count']).data_dict)
+
+#print(df.group_by('Embarked').aggregate('Survived', 'avg', 'meanSurvival').aggregate('PassengerId', 'count', 'count').select_columns(['Embarked', 'meanSurvival', 'count']).data_dict)

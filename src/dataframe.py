@@ -70,38 +70,35 @@ class DataFrame :
         return DataFrame(new_df, self.columns)
 
     def order_by(self, order, ascending = True) :
+        if type(ascending) == str and ascending.casefold() == 'asc' :
+            ascending = True
+        elif type(ascending) == str and ascending.casefold() == 'desc' :
+            ascending = False
         arr = self.to_array()
         location = self.columns.index(order)
+        kind = False
         if type(self.data_dict[order][0]) == int :
             kind = True
-        else:
-            kind = False
         data_array = []
         for row in arr :
             if kind :
                 num = row[location]
             else :
                 num = row[location][0]
-            i = -len(data_array)
             run = False
-            while i < 0  :
-                if kind :
+            for i in range(-len(data_array),0) :
+                if kind : 
                     compare = num < data_array[i][location]
                 else :
                     compare = num < data_array[i][location][0]
-                if compare and not run :
+                if compare :
                     data_array.insert(i, row)
                     run = True
-                i += 1
-            if data_array == [] or not run :
+                    break
+            if not run :
                 data_array.append(row)
         if not ascending :
-            data_array_2 = []
-            k = len(data_array) - 1
-            while k >= 0 :
-                data_array_2.append(data_array[k])
-                k -= 1
-            data_array = data_array_2
+            data_array.reverse()
         return DataFrame.from_array(data_array, self.columns)
         
     @classmethod
@@ -203,23 +200,16 @@ class DataFrame :
         df_array = self.to_array()
         df_columns = self.columns.copy()
         col_index = self.columns.index(colname)
-        
-        if how == 'count' :
-            how_funct = (lambda a : len(a) if type(a) == list else 0)
-        elif how == 'min' :
-            how_funct = (lambda a : min(a) if type(a) == list else None)
-        elif how == 'max' :
-            how_funct = (lambda a : max(a) if type(a) == list else None)
-        elif how == 'sum' :
-            how_funct = (lambda a : sum(a) if type(a) == list else a)
-        elif how == 'avg' :
-            how_funct = (lambda a : (sum(a)/len(a)) if type(a) == list else a)
-        else :
-            print('Unknown command')
-            return
+
+        hows = {'count' : (lambda a : len(a) if type(a) == list else 0), 
+                'min' : (lambda a : min(a) if type(a) == list else None),
+                'max' : (lambda a : max(a) if type(a) == list else None),
+                'sum' : (lambda a : sum(a) if type(a) == list else a),
+                'avg' : (lambda a : (sum(a)/len(a)) if type(a) == list else a)}
         
         for row_index in range(len(df_array)) :
-            new_val = how_funct(df_array[row_index][col_index])
+            #new_val = how_funct(df_array[row_index][col_index])
+            new_val = hows[how](df_array[row_index][col_index])
             df_array[row_index][col_index] = new_val
         if new_name != None :
             df_columns[col_index] = new_name
@@ -227,11 +217,38 @@ class DataFrame :
         return DataFrame.from_array(df_array, df_columns)
     
     def query(self, query) :
-        split_query = query.split(' ')
-        for q_id in range(len(split_query)) :
-            if ',' in split_query[q_id] :
-                split_query[q_id] = split_query[q_id].replace(',','')
+        split_query = [word.replace(',','') if ',' in word else word  for word in query.split(' ')]
+
         if split_query[0] != 'SELECT' :
             print('Unknown command')
             return
-        return self.select_columns(split_query[1:])
+
+        queries = {'SELECT' : (lambda a,b,c : a.select_columns(split_query[b:c])),
+                   'ORDER_BY' : (lambda a, b, c : (a.order_by(split_query[index-1],split_query[index]) for index in range(c-1,b,-2)))}
+
+        query_order = [['SELECT',1,len(split_query)]]
+
+        if 'ORDER BY' in query :
+            split_query.insert(split_query.index('ORDER'), 'ORDER BY')
+            split_query.remove('ORDER')
+            split_query.remove('BY')
+            query_order.insert(0,['ORDER_BY',split_query.index('ORDER BY'), len(split_query)])
+            query_order = self.sort_queries(query_order)
+            
+        df = DataFrame(self.data_dict, self.columns)
+        for (query_name, start, stop) in query_order :
+            df = queries[query_name](df, start, stop)
+        
+        return df
+
+    def sort_queries(self, query_order) :
+        new_order = []
+        for (query, start, stop) in query_order :
+            current_stop = stop
+            for (_, start_2, stop_2) in query_order :
+                if current_stop > start_2 and start < start_2 :
+                    current_stop = start_2
+            new_order.append([query, start, current_stop])
+        return new_order
+
+
