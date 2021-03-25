@@ -192,19 +192,25 @@ class DataFrame :
         new_columns.insert(new_loc, key)
         return DataFrame(new_data_dict, new_columns)
 
-    def group_by(self, catagory) :
+    def group_by(self, catagory, sub = None) :
         sorted_cata = list({element : [] for element in self.data_dict[catagory]}.keys())
         new_df = {col : [] for col in self.columns}
         new_df[catagory] = sorted_cata
-        for element in sorted_cata :
+        if sub != None :
+            new_df[catagory] = list(sub)
+        for element in new_df[catagory] :
             require = (lambda a : a[catagory] == element)
+            if sub != None :
+                print(element)
+                require = sub[element]
+            #print(element)
             where = self.select_rows_where(require).data_dict
             for col in self.columns :
                 if col == catagory :
                     continue
                 new_df[col].append(where[col])
         return DataFrame(new_df, self.columns)
-    
+
     def aggregate(self, colname, how, new_name = None) :
         df_array = self.to_array()
         df_columns = self.columns.copy()
@@ -214,7 +220,7 @@ class DataFrame :
                 'min' : (lambda a : min(a) if type(a) == list else None),
                 'max' : (lambda a : max(a) if type(a) == list else None),
                 'sum' : (lambda a : sum(a) if type(a) == list else a),
-                'avg' : (lambda a : (sum(a)/len(a)) if type(a) == list else a)}
+                'avg' : (lambda a : (sum(a)/len(a)) if type(a) == list and len(a) != 0 else 0)}
         
         for row_index in range(len(df_array)) :
             #new_val = how_funct(df_array[row_index][col_index])

@@ -128,6 +128,27 @@ print('Yes it does!', "\n")
 
 #print(df.group_by('Embarked').aggregate('Survived', 'avg', 'meanSurvival').aggregate('PassengerId', 'count', 'count').select_columns(['Embarked', 'meanSurvival', 'count']).data_dict)
 
-#print(df.group_by('Embarked').aggregate('Survived', 'avg', 'meanSurvival').aggregate('PassengerId', 'count', 'count').select_columns(['Embarked', 'meanSurvival', 'count']).data_dict)
+#print(df.select_rows_where((lambda a : a['Age'] != None and a['Age'] >= 20 and a['Age'] < 30)).data_dict)
 
-#print(df.group_by('Embarked').aggregate('Survived', 'avg', 'meanSurvival').aggregate('PassengerId', 'count', 'count').select_columns(['Embarked', 'meanSurvival', 'count']).data_dict)
+''''
+select_age = {'0<x<10' : (lambda a : a['Age'] != None and a['Age'] >= 0 and a['Age'] < 10),
+              '10<x<20' : (lambda a : a['Age'] != None and a['Age'] >= 10 and a['Age'] < 20),
+              '20<x<30' : (lambda a : a['Age'] != None and a['Age'] >= 20 and a['Age'] < 30),
+              '30<x<40' : (lambda a : a['Age'] != None and a['Age'] >= 30 and a['Age'] < 40),
+              '40<x<50' : (lambda a : a['Age'] != None and a['Age'] >= 40 and a['Age'] < 50),
+              '50<x<60' : (lambda a : a['Age'] != None and a['Age'] >= 50 and a['Age'] < 60),
+              '60<x<70' : (lambda a : a['Age'] != None and a['Age'] >= 60 and a['Age'] < 70),
+              '70<x<80' : (lambda a : a['Age'] != None and a['Age'] >= 70 and a['Age'] <= 80) }
+#'''
+#print(df.group_by('Age', select_age).aggregate('Survived', 'avg', 'meanSurvival').aggregate('PassengerId', 'count', 'count').select_columns(['Age', 'meanSurvival', 'count']).to_array())
+
+''''
+select_fare = {'0<x<5' : (lambda a : a['Fare'] != None and a['Fare'] >= 0 and a['Fare'] < 5),
+              '5<x<10' : (lambda a : a['Fare'] != None and a['Fare'] >= 5 and a['Fare'] < 10),
+              '10<x<20' : (lambda a : a['Fare'] != None and a['Fare'] >= 10 and a['Fare'] < 20),
+              '20<x<50' : (lambda a : a['Fare'] != None and a['Fare'] >= 20 and a['Fare'] < 50),
+              '50<x<100' : (lambda a : a['Fare'] != None and a['Fare'] >= 50 and a['Fare'] < 100),
+              '100<x<200' : (lambda a : a['Fare'] != None and a['Fare'] >= 100 and a['Fare'] < 200),
+              '200<x' : (lambda a : a['Fare'] != None and a['Fare'] >= 200) }
+#'''
+#print(df.group_by('Fare', select_fare).aggregate('Survived', 'avg', 'meanSurvival').aggregate('PassengerId', 'count', 'count').select_columns(['Fare', 'meanSurvival', 'count']).to_array())
