@@ -162,16 +162,24 @@ class DataFrame :
         new_columns.append(interaction_key)
         return DataFrame(new_data_dict, new_columns)
 
-    def create_dummy_variables(self, initial_key) :
+    def create_dummy_variables(self, initial_key, T_F = False, perscribed = None, add_on = '') :
+        if T_F :
+            new_d_dict = self.data_dict.copy()
+            for index in range(len(new_d_dict[initial_key])) :
+                new_d_dict[initial_key][index] = perscribed[self.data_dict[initial_key][index]]
+            return DataFrame(new_d_dict, self.columns)
         dummy_dict = {}
-        for data_list in self.data_dict[initial_key] :
-            for dummy_var in data_list :
+        for data in self.data_dict[initial_key] :
+            if type(data) != list and type(data) != str :
+                dummy_dict[str(data)] = []
+                continue
+            for dummy_var in data :
                 dummy_dict[dummy_var] = []
         dummy_keys = [key for key in dummy_dict]
         dummy_keys.reverse()
         for data_list in self.data_dict[initial_key] :
             for key in dummy_keys :
-                if key not in data_list :
+                if key not in str(data_list) :
                     dummy_dict[key].append(0)
                 else :
                     dummy_dict[key].append(1)
@@ -181,8 +189,8 @@ class DataFrame :
         new_columns = [key for key in self.data_dict if key != initial_key]
         
         for dummy_key in dummy_keys :
-            new_data_dict[dummy_key] = dummy_dict[dummy_key]
-            new_columns.insert(inital_index, dummy_key)
+            new_data_dict[add_on+dummy_key] = dummy_dict[dummy_key]
+            new_columns.insert(inital_index, add_on+dummy_key)
         return DataFrame(new_data_dict, new_columns)
 
     def add_data(self, key, data, new_loc = 999) : 
@@ -223,7 +231,6 @@ class DataFrame :
                 'avg' : (lambda a : (sum(a)/len(a)) if type(a) == list and len(a) != 0 else 0)}
         
         for row_index in range(len(df_array)) :
-            #new_val = how_funct(df_array[row_index][col_index])
             new_val = hows[how](df_array[row_index][col_index])
             df_array[row_index][col_index] = new_val
         if new_name != None :
