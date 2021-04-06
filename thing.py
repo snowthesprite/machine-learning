@@ -16,7 +16,7 @@ log_reg1 = LogisticRegressor(df,dependent_variable = 'y', change = 0.1)
 
 log_reg2 = LogisticRegressor(df,dependent_variable = 'y', change = 0.01)
 
-#''''
+
 log_reg3 = LogisticRegressor(df,dependent_variable = 'y', change = 0.001)
 
 log_reg4 = LogisticRegressor(df,dependent_variable = 'y', change = 0.0001)
@@ -53,6 +53,3 @@ plt.xlabel('x')
 plt.ylabel('Prediction')
 plt.title('Differences between Logistic Regressors')
 plt.savefig('plot.png')
-
-
-#'''
