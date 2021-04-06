@@ -4,10 +4,11 @@
 #python tests/test_gradient_descent.py
 #python tests/test_logistic_regressor.py
 #python tests/test_poly_regressor.py
+python tests/test_updated_log_regress.py
 
 #python analysis/signal_separation.py
 
 #python kaggle/titanic/titanic_test.py
 #python kaggle/titanic/titanic_survival.py
 
-python thing.py
+#python thing.py
