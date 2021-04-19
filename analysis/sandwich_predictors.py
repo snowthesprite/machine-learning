@@ -35,7 +35,9 @@ for index_1 in range(len(terms) - 1) :
         interaction_2 = terms[index_2]
         if interaction_1 + " * " + interaction_2 not in df.columns and interaction_2 + " * " + interaction_1 not in df.columns and interaction_1 != interaction_2 :
             df = df.create_interaction_terms(interaction_1, interaction_2)
-
+print(terms)
+print(df.columns)
+''''
 linear = LinearRegressor(df, 'rating')
 logistic = LogisticRegressor(df, 'rating', 10)
 
@@ -56,3 +58,4 @@ print(logistic.predict({'beef' : 8, 'pb' : 4, 'mayo' : 1}), "\n")
 
 print(linear.predict({'beef' : 8, 'mayo' : 1, 'jelly' : 1}))
 print(logistic.predict({'beef' : 8, 'mayo' : 1, 'jelly' : 1}))
+'''
