@@ -11,7 +11,9 @@
 #python tests/test_updated_log_regress.py
 #python tests/test_k_nearest_neighbors_classifier.py
 
-python analysis/KNN_leave_out.py
+python analysis/KNN/KNN_modeling_normal.py
+python analysis/KNN/KNN_2.py
+python analysis/KNN/KNN_3.py
 
 #python kaggle/titanic/titanic_test.py
 #python kaggle/titanic/titanic_survival.py
