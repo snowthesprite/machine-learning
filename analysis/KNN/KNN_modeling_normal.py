@@ -1,10 +1,10 @@
 import pandas as pd
-import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
 from timeit import default_timer as timer
 start_time = timer()
 
 df = pd.read_csv('/home/runner/machine-learning/analysis/KNN/book_type.csv')
+
 
 def change_type_to_int (book_type) :
     if book_type == "children's book" :
@@ -15,6 +15,8 @@ def change_type_to_int (book_type) :
 df['book type'] = df['book type'].apply(change_type_to_int)
 
 book_type = df['book type']
+
+del df['book type']
 
 def find_accuracy (predict, actual) :
     num_correct = 0
@@ -29,18 +31,9 @@ def find_accuracy (predict, actual) :
 ##Unscaled
 #'''
 acc_un = []
-predict_un = {k : [] for k in range(1,100)}
-
-for row_id in range(book_type.size) :
-    mod_df = df.drop(row_id)
-    mod_book_type = book_type.drop(row_id)
-    for k in range(1,100) :
-        KNN = KNeighborsClassifier(n_neighbors=k)
-        KNN.fit(mod_df, mod_book_type)
-        predict_un[k].append(KNN.predict([df.iloc[row_id]]))
-
+predict_un = {k : [] for k in range(1,100,2)}
 #'''
-print('un')
+
 ##Simple scaling
 #'''
 df_simple = df.copy()
@@ -50,18 +43,9 @@ df_simple['avg sentence length'] = df['avg sentence length']/df['avg sentence le
 df_simple['avg word size'] = df['avg word size']/df['avg word size'].max()
 
 acc_simp = []
-predict_simp = {k : [] for k in range(1,100)}
-
-for row_id in range(book_type.size) :
-    mod_df = df_simple.drop(row_id)
-    mod_book_type = book_type.drop(row_id)
-    for k in range(1,100) :
-        KNN = KNeighborsClassifier(n_neighbors=k)
-        KNN.fit(mod_df, mod_book_type)
-        predict_simp[k].append(KNN.predict([df_simple.iloc[row_id]]))
-
+predict_simp = {k : [] for k in range(1,100,2)}
 #'''
-print('simp')
+
 ##Min-max
 #'''
 df_min_max = df.copy()
@@ -71,18 +55,9 @@ df_min_max['avg sentence length'] = (df['avg sentence length']-df['avg sentence 
 df_min_max['avg word size'] = (df['avg word size']-df['avg word size'].min())/(df['avg word size'].max() - df['avg word size'].min())
 
 acc_min_max = []
-predict_min_max = {k : [] for k in range(1,100)}
-
-for row_id in range(book_type.size) :
-    mod_df = df_min_max.drop(row_id)
-    mod_book_type = book_type.drop(row_id)
-    for k in range(1,100) :
-        KNN = KNeighborsClassifier(n_neighbors=k)
-        KNN.fit(mod_df, mod_book_type)
-        predict_min_max[k].append(KNN.predict([df_min_max.iloc[row_id]]))
-
+predict_min_max = {k : [] for k in range(1,100,2)}
 #'''
-print('min max')
+
 ##z-score
 #'''
 df_z = df.copy()
@@ -92,20 +67,40 @@ df_z['avg sentence length'] = (df['avg sentence length']-df['avg sentence length
 df_z['avg word size'] = (df['avg word size']-df['avg word size'].mean())/(df['avg word size'].std())
 
 acc_z = []
-predict_z = {k : [] for k in range(1,100)}
-
+predict_z = {k : [] for k in range(1,100,2)}
+#'''
+#'''
 for row_id in range(book_type.size) :
-    mod_df = df_z.drop(row_id)
+    mod_df = df.drop(row_id)
+    mod_df_simp = df_simple.drop(row_id)
+    mod_df_min = df_min_max.drop(row_id)
+    mod_df_z = df_z.drop(row_id)
+
     mod_book_type = book_type.drop(row_id)
-    for k in range(1,100) :
+    for k in range(1,100,2) :
         KNN = KNeighborsClassifier(n_neighbors=k)
+        #'''
         KNN.fit(mod_df, mod_book_type)
+        predict_un[k].append(KNN.predict([df.iloc[row_id]]))
+        #'''
+        #'''
+        KNN.fit(mod_df_simp, mod_book_type)
+        predict_simp[k].append(KNN.predict([df_simple.iloc[row_id]]))
+        #'''
+        #'''
+        KNN.fit(mod_df_min, mod_book_type)
+        predict_min_max[k].append(KNN.predict([df_min_max.iloc[row_id]]))
+        #'''
+        #'''
+        KNN.fit(mod_df_z, mod_book_type)
         predict_z[k].append(KNN.predict([df_z.iloc[row_id]]))
+        #'''
+    if row_id % 10 == 0 :
+        print('row', row_id)
 
 #'''
-print('z')
 
-for k in range(1,100) :
+for k in range(1,100,2) :
     acc_un.append(find_accuracy(predict_un[k],book_type))
     acc_simp.append(find_accuracy(predict_simp[k],book_type))
     acc_min_max.append(find_accuracy(predict_min_max[k],book_type))
@@ -115,14 +110,13 @@ for k in range(1,100) :
 import matplotlib.pyplot as plt
 #plt.style.use('bmh')
 
-plt.plot(range(1,100), acc_un)
-plt.plot(range(1,100), acc_simp)
-plt.plot(range(1,100), acc_min_max)
-plt.plot(range(1,100), acc_z)
-#plt.xlim((1,19))
+plt.plot(range(1,100,2), acc_un)
+plt.plot(range(1,100,2), acc_simp)
+plt.plot(range(1,100,2), acc_min_max)
+plt.plot(range(1,100,2), acc_z)
+
 plt.legend(['Unaltered', 'Simple', 'Min-Max', 'Z'])
 
-plt.savefig('analysis/KNN/KNN_model.png')
+plt.savefig('analysis/KNN/KNN_simp.png')
 
 print('\n\n', timer() - start_time, 'sec \n\n\n')
-#'''
