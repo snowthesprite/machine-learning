@@ -30,7 +30,6 @@ del df['Cookie Type']
 def find_accuracy(predictions) :
     correct = 0
     for index in range(cookie_type.size) :
-        print(index, predictions[index], cookie_type[index])
         if predictions[index] == cookie_type[index] :
             correct+=1
     return correct/cookie_type.size
@@ -45,10 +44,7 @@ for neigh_numb in range(1, cookie_type.size) :
         KNN = KNeighborsClassifier(n_neighbors=neigh_numb)
         KNN.fit(mod_df, mod_cookies)
         predictions.append(KNN.predict([df.iloc[row_id]]))
-    print('k={}'.format(neigh_numb))
     all_acc.append(find_accuracy(predictions))
-    print()
-    print()
 
 '''
 import matplotlib.pyplot as plt
