@@ -28,6 +28,8 @@ df_simp = df.copy()
 df_min_max = df.copy()
 df_z = df.copy()
 
+print()
+
 for column in columns :
     df_simp[column] = df[column]/df[column].max()
 
