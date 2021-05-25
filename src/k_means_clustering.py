@@ -9,6 +9,7 @@ class KMeans () :
 
     def compute_center_dist (self) :
         center_dist = {id : [] for id in self.clust_id}
+        
         for cluster_id in self.clust_id :
             for col_id in range(len(self.data_arr[0])) :
                 col_mean = 0
@@ -42,11 +43,23 @@ class KMeans () :
             new_clusters[closest_center[0]].append(node_id)
         self.clusters = new_clusters
 
-
     def run (self) :
         while True :
             old_cluster = self.clusters
             self.update_clusters()
             if self.clusters == old_cluster :
                 break
+    
+    def compute_square_error (self) : 
+        total_error = 0
+        for cluster_id in self.clust_id :
+            center = self.center_dist[cluster_id]
+            for node_id in self.clusters[cluster_id] :
+                node = self.data_arr[node_id]
+                error = 0
+                for col_id in range(len(self.data_arr[0])) :
+                    error += (node[col_id] - center[col_id]) ** 2
+                total_error+= error
+        return total_error
+
 
