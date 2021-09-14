@@ -10,10 +10,20 @@ points = [{'coord': (5,2), 'type' : 2},
 
 tree = DecisionTree(points)
 tree.make_tree()
-print(tree.start.points)
+#print(tree.start.points)
 
 print(tree.predict((5,4)))
 #print(tree.find_splits())
 #print(tree.find_best_split())
 #print(tree.entropy())
+print('\n\nnew tree\n\n')
+points = [{'coord': (2,4), 'type': 1},
+        {'coord': (2,3), 'type': 1},
+        {'coord': (2,2), 'type': 2},
+        {'coord': (2,1), 'type': 2},
+        {'coord': (3,4), 'type': 1},
+        {'coord': (3,3), 'type': 2},
+        {'coord': (3,2), 'type': 2}]
 
+tree_2 = DecisionTree(points)
+tree.make_tree()
