@@ -1,40 +1,49 @@
 import math
+import random
+
 class SplitNode () :
-    def __init__ (self, points, parent = None, kind=None) :
+    def __init__ (self, points, kind=None) :
         self.points = points
-        self.parent = parent
-        self.children = []
+        self.children = None
         self.best_split = None
         self.entropy = None
         self.kind = kind
+        self.type = None 
 
 class DecisionTree () :
-    def __init__(self, all_points) :
+    def __init__(self, all_points, min_size_to_split = 1) :
         self.dim = 2
         self.start = SplitNode(all_points)
+        self.min_to_split = min_size_to_split
 
     def make_tree(self) :
         queue = [self.start]
         while queue != [] :
             node = queue[0]
-            node.entropy = self.entropy(node.points)
-            print(node.kind)
-            print(node.entropy)
-            print(node.points)
-            if node.entropy == 0 :
-                queue.pop(0)
+            queue.pop(0)
+            node.entropy = self.find_entropy(node.points)
+            if node.entropy == 0 or len(node.points) < self.min_to_split :
+                node.type = self.find_node_type(node)
                 continue
             split = self.find_best_split(node.points)
             node.best_split = split['split']
-            print(split)
-            great_node = SplitNode(split['greater'], node, 'grt' + str(node.best_split))
-            less_node = SplitNode(split['lesser'], node,'less' + str(node.best_split))
-            node.children.extend([great_node, less_node])
+            great_node = SplitNode(split['greater'], 'grt' + str(node.best_split))
+            less_node = SplitNode(split['lesser'],'less' + str(node.best_split))
+            node.children = [great_node, less_node]
             queue.extend([great_node, less_node])
-            queue.pop(0)
-            print('next node\n')
 
-    def entropy(self, points) :
+    def find_node_type(self, node) :
+        len_1 = sum([1 for point in node.points if point['type'] == 1])
+        len_2 = sum([1 for point in node.points if point['type'] == 2])
+        if len_1 > len_2 :
+            node_type = 1
+        elif len_2 > len_1 :
+            node_type = 2
+        else : 
+            node_type = random.randint(1,2)
+        return node_type
+
+    def find_entropy(self, points) :
         len_1 = sum([1 for point in points if point['type'] == 1])
         len_2 = sum([1 for point in points if point['type'] == 2])
         p_1 = len_1/(len_1 + len_2)
@@ -57,23 +66,16 @@ class DecisionTree () :
         return splits
     
     def find_best_split(self, points) :
-        print('\nbest split\n')
         splits = self.find_splits(points)
-        print(splits)
-        best_split = {'split' : 0, 'greater' : None, 'lesser' : None}
+        best_split = {}
         best_avg_entropy = 1
         for axis in range(self.dim) :
             for split in splits[axis] :
                 greater = [point for point in points if point['coord'][axis] >= split]
                 lesser = [point for point in points if point['coord'][axis] < split]
-                g_entropy = self.entropy(greater)
-                l_entropy = self.entropy(lesser)
+                g_entropy = self.find_entropy(greater)
+                l_entropy = self.find_entropy(lesser)
                 avg_entropy = len(greater)/len(points) * g_entropy + len(lesser)/len(points) *l_entropy
-                print(split)
-                print(g_entropy)
-                print(l_entropy)
-                print(avg_entropy)
-                print()
                 if avg_entropy < best_avg_entropy :
                     best_avg_entropy = avg_entropy
                     best_split['split'] = (axis, split)
@@ -82,15 +84,12 @@ class DecisionTree () :
         return best_split
 
     def predict(self, coord) :
-        point_type = None
         current_node = self.start
-        while point_type == None :
-            if current_node.entropy == 0 :
-                point_type = current_node.points[0]['type']
-                break
+        while True :
+            if current_node.type != None :
+                return current_node.type
             axis,split = current_node.best_split
             if coord[axis] >= split : 
                 current_node = current_node.children[0]
             else :
                 current_node = current_node.children[1]
-        return point_type
