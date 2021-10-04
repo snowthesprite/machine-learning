@@ -11,10 +11,12 @@ class SplitNode () :
         self.type = None 
 
 class DecisionTree () :
-    def __init__(self, all_points, min_size_to_split = 1) :
+    def __init__(self, all_points, min_size_to_split = 1, rand_seed = None) :
         self.dim = 2
         self.start = SplitNode(all_points)
         self.min_to_split = min_size_to_split
+        if rand_seed != None :
+            random.seed(rand_seed)
 
     def make_tree(self) :
         queue = [self.start]
@@ -22,10 +24,12 @@ class DecisionTree () :
             node = queue[0]
             queue.pop(0)
             node.entropy = self.find_entropy(node.points)
-            if node.entropy == 0 or len(node.points) < self.min_to_split :
+            split = self.find_best_split(node.points)
+
+            if node.entropy == 0 or len(node.points) < self.min_to_split or split == {} :
                 node.type = self.find_node_type(node)
                 continue
-            split = self.find_best_split(node.points)
+                
             node.best_split = split['split']
             great_node = SplitNode(split['greater'], 'grt' + str(node.best_split))
             less_node = SplitNode(split['lesser'],'less' + str(node.best_split))
@@ -40,7 +44,7 @@ class DecisionTree () :
         elif len_2 > len_1 :
             node_type = 2
         else : 
-            node_type = random.randint(1,2)
+            node_type = math.floor(random.random()*2)
         return node_type
 
     def find_entropy(self, points) :
@@ -54,15 +58,18 @@ class DecisionTree () :
         
 
     def find_splits(self, points) :
+        organized = {axis: set([]) for axis in range(self.dim)}
         splits = [set([]) for _ in range(self.dim)]
-        for index_1 in range(len(points)) :
-            point_1 = points[index_1]['coord']
-            for index_2 in range(len(points)) : 
-                point_2 = points[index_2]['coord']
-                for axis in range(self.dim) :
-                    if point_1[axis] == point_2[axis] :
-                        continue
-                    splits[axis].add((point_1[axis]+point_2[axis])/2)
+        for point in points :
+            for axis in range(self.dim) :
+                organized[axis].add(point['coord'][axis])
+        for axis in range(self.dim) :
+            organized[axis] = list(organized[axis])
+            organized[axis].sort()
+            for index in range(len(organized[axis])-1) :
+                adj_1 = organized[axis][index]
+                adj_2 = organized[axis][index+1]
+                splits[axis].add((adj_1+adj_2)/2)
         return splits
     
     def find_best_split(self, points) :

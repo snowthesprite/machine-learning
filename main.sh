@@ -11,7 +11,7 @@
 #python tests/test_updated_log_regress.py
 #python tests/test_k_nearest_neighbors_classifier.py
 #python tests/test_k_means_clustering.py
-python tests/test_decision_tree.py
+#python tests/test_decision_tree.py
 
 #python analysis/KNN/KMeans_elbow.py
 #python analysis/KNN/KNN.py
@@ -20,3 +20,5 @@ python tests/test_decision_tree.py
 #python kaggle/titanic/titanic_survival.py
 
 #python thing.py
+
+python datasets/semi_rand_data.py
