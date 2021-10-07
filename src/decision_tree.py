@@ -93,6 +93,7 @@ class DecisionTree () :
     def predict(self, coord) :
         current_node = self.start
         while True :
+            #print(current_node.points)
             if current_node.type != None :
                 return current_node.type
             axis,split = current_node.best_split
