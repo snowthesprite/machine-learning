@@ -2,8 +2,8 @@ import random
 import math
 import sys
 sys.path.append('src')
-from decision_tree import DecisionTree
-
+from decision_tree import *
+'''
 points = [{'coord': (5,2), 'type' : 2},
         {'coord': (7,4), 'type' : 1},
         {'coord': (1,8), 'type' : 2},
@@ -47,7 +47,7 @@ points = [{'coord': (1,7), 'type': 1},
 tree = DecisionTree(points,7)
 tree.make_tree()
 
-assert tree.start.best_split == (0,4)
+assert tree.start.split == (0,4)
 
 ##Impure tie 
 points = [{'coord': (1,5), 'type': 1},
@@ -60,7 +60,8 @@ points = [{'coord': (1,5), 'type': 1},
 tree = DecisionTree(points,5,1)
 tree.make_tree()
 
-assert tree.start.best_split == (1,4.5)
+assert tree.start.split == (1,4.5)
+#'''
 
 points = [{'coord': (0,1), 'type': 1},
         {'coord': (0,1), 'type': 1},
@@ -77,8 +78,15 @@ tree = DecisionTree(points, 1, 1)
 tree.make_tree()
 
 print(tree.start.children[0].kind)
+print('\n\n\n')
+#'''
+
+rand_tree = RandDecisionTree(points,1,1)
+rand_tree.make_tree()
+print(rand_tree.start.children[0].kind)
 
 ## Semi Random points
+''''
 centers = {1 : [(1,1), (4,4)], 2: [(1,4), (4,1)]}
 points = []
 
@@ -93,9 +101,9 @@ for kind in range(1,3) :
 
 point_num = len(points)
 
-rand_folds = [[] for _ in range(10)]
-for fold in range(10) :
-    for __ in range(int(point_num/10)) :
+rand_folds = [[] for _ in range(5)]
+for fold in range(5) :
+    for __ in range(int(point_num/5)) :
         id = math.floor(random.random() * len(points))
         rand_folds[fold].append(points[id])
         points.pop(id)
@@ -109,33 +117,34 @@ def find_accuracy(predictions, test) :
             correct+=1
     return correct/len(test)
 
-all_acc = [[] for _ in range(int(point_num/2))]
+min_split_val = [1,2,5,10,15,20,30,50,100]
+all_acc = {_ : [] for _ in min_split_val}
 
-for fold_id in range(10) :
+for fold_id in range(5) :
     print(fold_id)
     test_fold = rand_folds[fold_id]
     train_fold = []
-    for new_id in range(10) :
+    for new_id in range(5) :
         if new_id != fold_id :
             train_fold.extend(rand_folds[new_id])
-    for min_split in range(1, int(point_num/2)+1) :
+    for min_split in min_split_val :
         predictions = []
         tree = DecisionTree(train_fold, min_split)
         tree.make_tree()
         for point in test_fold :
             #print(point['coord'])
             predictions.append(tree.predict(point['coord']))
-        all_acc[min_split-1].append(find_accuracy(predictions, test_fold))
+        all_acc[min_split].append(find_accuracy(predictions, test_fold))
 
 avg_acc = []
-for acc in all_acc :
+for acc in all_acc.values() :
     avg_acc.append(sum(acc)/len(acc))
 
 #'''
+
+'''
 import matplotlib.pyplot as plt
 plt.style.use('bmh')
-
-min_split_val = range(1, int(point_num/2)+1)
 
 plt.plot(min_split_val, avg_acc)
 
