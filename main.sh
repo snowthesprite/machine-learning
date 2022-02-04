@@ -12,7 +12,8 @@
 #python tests/test_k_nearest_neighbors_classifier.py
 #python tests/test_k_means_clustering.py
 #python tests/test_decision_tree.py
-python tests/test_rand_forest.py
+#python tests/test_rand_forest.py
+python tests/test_neural_net.py
 
 #python analysis/KNN/KMeans_elbow.py
 #python analysis/KNN/KNN.py
