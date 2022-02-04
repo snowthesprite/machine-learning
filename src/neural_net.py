@@ -1,6 +1,8 @@
 def funct_sum (functions, input) :
     sum = 0
+    print('run')
     for funct in functions :
+        #print(funct(input))
         sum += funct(input)
     return sum
 
@@ -34,20 +36,33 @@ class NeuralNet ():
                 if node == 'bias' : 
                     new_node.value = lambda x : 1
                     self.nodes[layer].append(new_node)
+                    print()
                     continue
                 if layer == 0 :
                     new_node.value = lambda x : x
                     self.nodes[layer].append(new_node)
+                    print()
                     continue
+                print(id)
                 new_node.value = self.make_node_value(neural_net, layer, node_order, id)
                 self.nodes[layer].append(new_node)
                 
     def make_node_value(self, neural_net, layer, node_order, id) :
         node_elements = []
+        from_node = []
+        print('layer', layer-1, len(self.nodes[layer-1]))
         for prev_node_order in range(len(self.nodes[layer-1])) :
             prev_node = self.nodes[layer-1][prev_node_order]
+            from_node.append(prev_node)
+            print('id', prev_node.id, prev_node.output()(2))
             self.weights[(prev_node.id, id)] = neural_net[layer-1]['weights'][prev_node_order][node_order] 
-            node_elements.append((lambda x : self.weights[(prev_node.id, id)] * prev_node.output()(x)))
+            #node_elements.append((lambda x : self.weights[(prev_node.id, id)] * prev_node.output()(x)))
+            print('_',(lambda x : prev_node.output()(x))(2))
+            node_elements.append(lambda x : prev_node.output()(x))
+
+        print([node_element(2) for node_element in node_elements])
+        #print([node_element(1) for node_element in node_elements])
+        print()
         return (lambda x : funct_sum(node_elements, x))
     
     def calc_answer(self, input) :
