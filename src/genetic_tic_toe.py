@@ -3,7 +3,7 @@ import random
 class GeneticAlgorithm () :
     def __init__(self, num_players) :
         self.pop_size = num_players
-        self.original_gen = self.create_players(num_players)
+        self.gen_0 = self.create_players(num_players)
         self.good_moves = self.state_freq()
 
     def get_possible_moves(self, game_state) :
@@ -19,7 +19,7 @@ class GeneticAlgorithm () :
 
     def state_freq(self) : 
         states = {}
-        for state in self.original_gen[0] :
+        for state in self.gen_0[0] :
             if state.count('2') < 2 :
                 continue
             if state.count('1') == state.count('2') :
@@ -67,13 +67,20 @@ class GeneticAlgorithm () :
         plr_score = [{index : 0 for index in range(self.pop_size)} for _ in range(2)]
         for plr_1 in range(self.pop_size) :
             for plr_2 in range(self.pop_size) :
-                game = TicTacToe([group_1[plr_1], group_2[plr_2]])
-                if game.winner == 1 :
-                    plr_score[plr_1] += 1
-                    plr_score[plr_2] -= 1
-                elif game.winner == 2 :
-                    plr_score[plr_1] -= 1
-                    plr_score[plr_2] += 1
+                winner = self.run_game([group_1[plr_1], group_2[plr_2]])
+                if winner == 1 :
+                    plr_score[0][plr_1] += 1
+                    plr_score[1][plr_2] -= 1
+                elif winner == 2 :
+                    plr_score[0][plr_1] -= 1
+                    plr_score[1][plr_2] += 1
+                winner = self.run_game([group_2[plr_2], group_1[plr_1]])
+                if winner == 1 :
+                    plr_score[0][plr_1] -= 1
+                    plr_score[1][plr_2] += 1
+                elif winner == 2 :
+                    plr_score[0][plr_1] += 1
+                    plr_score[1][plr_2] -= 1
         return plr_score
 
     def find_plr_scores_same(self, group) :
@@ -82,11 +89,11 @@ class GeneticAlgorithm () :
             for plr_2 in range(self.pop_size) :
                 if plr_1 == plr_2 :
                     continue
-                game = TicTacToe([group[plr_1], group[plr_2]])
-                if game.winner == 1 :
+                winner = self.run_game([group[plr_1], group[plr_2]])
+                if winner == 1 :
                     plr_score[plr_1] += 1
                     plr_score[plr_2] -= 1
-                elif game.winner == 2 :
+                elif winner == 2 :
                     plr_score[plr_1] -= 1
                     plr_score[plr_2] += 1
         return plr_score
@@ -108,13 +115,33 @@ class GeneticAlgorithm () :
                 children.extend(kids)
         return children
 
+    def calc_avg_freq(self, group) :
+        data = {'state_win': 0, 'win': 0, 'state_block': 0, 'block': 0}
+        for state in group[0] :
+            no_moves = True
+            if self.good_moves[state]['win_moves'] != [] :
+                data['state_win'] += 1
+                no_moves = False
+            if self.good_moves[state]['block_moves'] != [] :
+                data['state_block'] += 1
+                no_moves = False
+            if no_moves :
+                continue
+            for strat in group :
+                if strat[state] in self.good_moves[state]['win_moves'] :
+                    data['win'] += 1
+                if strat[state] in self.good_moves[state]['block_moves'] :
+                    data['block'] += 1
+        return data
+
+        
     def for_generation(self, gen) :
-        wanted_data = {}
-        current_gen = self.original_gen
-        for generation in range(gen) :
-            top = self.find_top_5(current_gen)
-            next_gen = self.mate(top)
-            next_gen.extend(top)
+        wanted_data = {0: {'vs_1': 0, 'vs_prev': 0, 'freq': self.calc_avg_freq(self.gen_0)}}
+        prev_gen = self.gen_0
+        for generation in range(1,gen) :
+            top = self.find_top_5(prev_gen)
+            cur_gen = self.mate(top)
+            cur_gen.extend(top)
 
     def run_game(self, players) :
         index = 1
