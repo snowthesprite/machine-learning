@@ -104,6 +104,11 @@ class GeneticAlgorithm () :
         scores.sort(reverse=True, key=(lambda x : x[1]))
         return [group[id] for id, score in scores[:5]]
 
+    def avg_score(self, group_1, group_2) :
+        scores = self.find_player_scores(group_1, group_2)
+        g_1_score = [score for score in scores[0].values()]
+        return sum(g_1_score)/len(g_1_score)
+
     def mate(self, group) :
         children = []
         for mom_1 in range(len(group)) :
@@ -117,7 +122,7 @@ class GeneticAlgorithm () :
 
     def calc_avg_freq(self, group) :
         data = {'state_win': 0, 'win': 0, 'state_block': 0, 'block': 0}
-        for state in group[0] :
+        for state in self.good_moves :
             no_moves = True
             if self.good_moves[state]['win_moves'] != [] :
                 data['state_win'] += 1
@@ -134,7 +139,6 @@ class GeneticAlgorithm () :
                     data['block'] += 1
         return data
 
-        
     def for_generation(self, gen) :
         wanted_data = {0: {'vs_1': 0, 'vs_prev': 0, 'freq': self.calc_avg_freq(self.gen_0)}}
         prev_gen = self.gen_0
@@ -142,6 +146,10 @@ class GeneticAlgorithm () :
             top = self.find_top_5(prev_gen)
             cur_gen = self.mate(top)
             cur_gen.extend(top)
+            wanted_data[generation] = {'vs_1': self.avg_score(cur_gen, self.gen_0),
+                                        'vs_prev': self.avg_score(cur_gen, prev_gen),
+                                        'freq': self.calc_avg_freq(cur_gen)}
+            prev_gen = cur_gen
 
     def run_game(self, players) :
         index = 1
