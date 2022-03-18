@@ -7,5 +7,35 @@ from genetic_tic_toe import *
 print(random.choice([1,2]))
 
 gene = GeneticAlgorithm(25)
-mate = gene.mate(gene.find_top_5(gene.original_gen))
-print(len(mate))
+gen_scores = gene.for_generation(5)
+
+import matplotlib.pyplot as plt
+plt.style.use('bmh')
+
+generation = []
+avg_vs_1 = []
+avg_vs_prev = []
+win_freq = []
+block_freq = []
+
+
+for gen, scores in gen_scores :
+    generation.append(gen)
+    avg_vs_1.append(scores['vs_1'])
+    avg_vs_prev.append(scores['vs_prev'])
+    win_freq.append(scores['freq'][0])
+    block_freq.append(scores['freq'][1])
+
+plt.plot(generation, avg_vs_1)
+plt.savefig('Vs_1.png')
+plt.clf()
+plt.plot(generation, avg_vs_prev)
+plt.savefig('Vs_prev.png')
+plt.clf()
+plt.plot(generation, win_freq)
+plt.savefig('win_freq.png')
+plt.clf()
+plt.plot(generation, block_freq)
+plt.savefig('block_freq.png')
+
+

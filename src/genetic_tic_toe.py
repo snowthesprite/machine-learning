@@ -137,7 +137,11 @@ class GeneticAlgorithm () :
                     data['win'] += 1
                 if strat[state] in self.good_moves[state]['block_moves'] :
                     data['block'] += 1
-        return data
+        win_avg = data['win']/data['state_win']
+        win_avg = win_avg/self.pop_size
+        block_avg = data['block']/data['state_block']
+        block_avg = block_avg/self.pop_size
+        return [win_avg, block_avg]
 
     def for_generation(self, gen) :
         wanted_data = {0: {'vs_1': 0, 'vs_prev': 0, 'freq': self.calc_avg_freq(self.gen_0)}}
@@ -150,6 +154,7 @@ class GeneticAlgorithm () :
                                         'vs_prev': self.avg_score(cur_gen, prev_gen),
                                         'freq': self.calc_avg_freq(cur_gen)}
             prev_gen = cur_gen
+        return wanted_data
 
     def run_game(self, players) :
         index = 1
