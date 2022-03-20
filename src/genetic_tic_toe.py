@@ -3,11 +3,12 @@ import random
 class GeneticAlgorithm () :
     def __init__(self, num_players) :
         self.pop_size = num_players
-        self.gen_0 = self.create_players(num_players)
+        self.gen_0 = self.create_players()
         self.good_moves = self.state_freq()
 
     def get_possible_moves(self, game_state) :
         possible_moves = []
+        thing = self.check_for_winner(game_state)
         if self.check_for_winner(game_state) != None :
             return [[]]
         for index in range(len(game_state)) :
@@ -28,39 +29,41 @@ class GeneticAlgorithm () :
                 sym = 2
             chance = {}
             good_moves = self.catagorize_moves(state, sym)
-            chance['win_moves'] = organized_moves[0]
-            chance['block_moves'] = organized_moves[1]
+            chance['win_moves'] = good_moves[0]
+            chance['block_moves'] = good_moves[1]
             states[state] = chance
         return states
             
     def catagorize_moves(self, state, sym) :
         win_moves = []
-        loose_moves = []
+        block_moves = []
         for move in self.get_possible_moves(state) :
-            board = state.copy()
+            board = list(state)
             board[move] = str(sym)
             if self.check_for_winner(board) == sym :
                 win_moves.append(move)
-            elif self.check_for_winner(board) == (sym % 2)+1 :
-                loose_moves.append(move)
-        return [win_moves, loose_moves]
+            board[move] = str((sym%2)+1)
+            if self.check_for_winner(board) == (sym % 2)+1 :
+                block_moves.append(move)
+        return [win_moves, block_moves]
 
     def create_players(self) :
         players = [{} for _ in range(self.pop_size)]
         prev_choices = ['000000000']
-        num = 1
         while prev_choices != [] :
             choice = prev_choices[0]
+            prev_choices.remove(choice)
             possible_choices = self.get_possible_moves(choice)
             if [] in possible_choices :
-                prev_choices.remove(choice)
                 continue
+            if choice.count('1') == choice.count('2') :
+                sym = 1
+            else :
+                sym = 2
             for player in players :
                 player[choice] = random.choice(possible_choices)
-            update = [choice[:value] + str(num) + choice[value+1:] for value in possible_choices]
-            prev_choices.remove(choice)
+            update = [choice[:value] + str(sym) + choice[value+1:] for value in possible_choices]
             prev_choices.extend([move for move in update if move not in prev_choices])
-            num = (num % 2) + 1
         return players
 
     def find_player_scores(self, group_1, group_2) :
@@ -102,11 +105,13 @@ class GeneticAlgorithm () :
         scores = self.find_plr_scores_same(group)
         scores = [score for score in scores.items()]
         scores.sort(reverse=True, key=(lambda x : x[1]))
+        #print(scores)
         return [group[id] for id, score in scores[:5]]
 
     def avg_score(self, group_1, group_2) :
         scores = self.find_player_scores(group_1, group_2)
         g_1_score = [score for score in scores[0].values()]
+        #print(sum(g_1_score)/len(g_1_score))
         return sum(g_1_score)/len(g_1_score)
 
     def mate(self, group) :
@@ -147,13 +152,15 @@ class GeneticAlgorithm () :
         wanted_data = {0: {'vs_1': 0, 'vs_prev': 0, 'freq': self.calc_avg_freq(self.gen_0)}}
         prev_gen = self.gen_0
         for generation in range(1,gen) :
-            top = self.find_top_5(prev_gen)
+            #print(generation)
+            top = self.find_top_5(prev_gen)            
             cur_gen = self.mate(top)
             cur_gen.extend(top)
             wanted_data[generation] = {'vs_1': self.avg_score(cur_gen, self.gen_0),
                                         'vs_prev': self.avg_score(cur_gen, prev_gen),
                                         'freq': self.calc_avg_freq(cur_gen)}
             prev_gen = cur_gen
+            #print('\n\n')
         return wanted_data
 
     def run_game(self, players) :
@@ -161,12 +168,12 @@ class GeneticAlgorithm () :
         winner = None
         board = ['0' for _ in range(9)]
         while winner == None :
-            plr = players[index]
+            plr = players[index-1]
             choice = plr[''.join(board)]
             if choice != [] :
                 board[choice] = str(index)
 
-            winner = self.check_for_winner()
+            winner = self.check_for_winner(board)
             index = (index % 2) + 1
         return winner
 
@@ -175,14 +182,14 @@ class GeneticAlgorithm () :
 
         thing = [board[index: index+3] for index in range(0,9,3)] #row
         for index in range(3) :
-            thing.append([board[index] + board[index+3] + board[index+6]]) #column
-        thing.extend([[board[0] + board[4] + board[8]], [board[2] + board[4] + board[6]]]) #diagonal
+            thing.append(board[index] + board[index+3] + board[index+6]) #column
+        thing.extend([board[0] + board[4] + board[8], board[2] + board[4] + board[6]]) #diagonal
         return thing
 
     def check_for_winner(self, board) :
         thing = self.organize_board(board)
         for stuff in thing :
-            if len(set(stuff)) == 1 and set(stuff) != {'0'} :
+            if len(set(stuff)) == 1 and '0' not in set(stuff) :
                 return int(stuff[0])
         if '0' not in board :
             return 'tie'

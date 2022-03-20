@@ -2,12 +2,8 @@ import sys
 sys.path.append('src')
 from genetic_tic_toe import *
 
-#s = '123456789'
-#print(s[:2] + '0' + s[3:])
-print(random.choice([1,2]))
-
 gene = GeneticAlgorithm(25)
-gen_scores = gene.for_generation(5)
+gen_scores = gene.for_generation(100)
 
 import matplotlib.pyplot as plt
 plt.style.use('bmh')
@@ -19,7 +15,7 @@ win_freq = []
 block_freq = []
 
 
-for gen, scores in gen_scores :
+for (gen, scores) in gen_scores.items() :
     generation.append(gen)
     avg_vs_1.append(scores['vs_1'])
     avg_vs_prev.append(scores['vs_prev'])
