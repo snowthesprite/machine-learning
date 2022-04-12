@@ -1,4 +1,4 @@
-import random
+import random as rand
 #and tic-tac-toe...
 class GeneticAlgorithm () :
     def __init__(self, num_players) :
@@ -61,7 +61,7 @@ class GeneticAlgorithm () :
             else :
                 sym = 2
             for player in players :
-                player[choice] = random.choice(possible_choices)
+                player[choice] = rand.choice(possible_choices)
             update = [choice[:value] + str(sym) + choice[value+1:] for value in possible_choices]
             prev_choices.extend([move for move in update if move not in prev_choices])
         return players
@@ -88,8 +88,8 @@ class GeneticAlgorithm () :
 
     def find_plr_scores_same(self, group) :
         plr_score = {index : 0 for index in range(len(group))}
-        for plr_1 in range(self.pop_size) :
-            for plr_2 in range(self.pop_size) :
+        for plr_1 in range(len(group)) :
+            for plr_2 in range(len(group)) :
                 if plr_1 == plr_2 :
                     continue
                 winner = self.run_game([group[plr_1], group[plr_2]])
@@ -101,12 +101,25 @@ class GeneticAlgorithm () :
                     plr_score[plr_2] += 1
         return plr_score
     
-    def find_top_5(self, group) :
+    def find_top(self, group, num) :
         scores = self.find_plr_scores_same(group)
         scores = [score for score in scores.items()]
         scores.sort(reverse=True, key=(lambda x : x[1]))
         #print(scores)
-        return [group[id] for id, score in scores[:5]]
+        return [group[id] for id, score in scores[:num]]
+
+    def tournament_5(self, group) :
+        chosen = []
+        while len(chosen) < 5 :
+            round = []
+            while len(round) < 3 :
+                player = rand.choice(group)
+                if player not in chosen and player not in round :
+                    round.append(player)
+            best = self.find_top(round, 1)
+            chosen.extend(best)
+        return chosen
+            
 
     def avg_score(self, group_1, group_2) :
         scores = self.find_player_scores(group_1, group_2)
@@ -120,8 +133,8 @@ class GeneticAlgorithm () :
             for mom_2 in range(mom_1+1, len(group)) :
                 kids = [{},{}]
                 for state in group[mom_1] :
-                    kids[0][state] = group[random.choice([mom_1,mom_2])][state]
-                    kids[1][state] = group[random.choice([mom_1,mom_2])][state]
+                    kids[0][state] = group[rand.choice([mom_1,mom_2])][state]
+                    kids[1][state] = group[rand.choice([mom_1,mom_2])][state]
                 children.extend(kids)
         return children
 
@@ -152,8 +165,9 @@ class GeneticAlgorithm () :
         wanted_data = {0: {'vs_1': 0, 'vs_prev': 0, 'freq': self.calc_avg_freq(self.gen_0)}}
         prev_gen = self.gen_0
         for generation in range(1,gen) :
-            #print(generation)
-            top = self.find_top_5(prev_gen)            
+            print(generation)
+            #top = self.find_top(prev_gen, 5)      
+            top = self.tournament_5(prev_gen)      
             cur_gen = self.mate(top)
             cur_gen.extend(top)
             wanted_data[generation] = {'vs_1': self.avg_score(cur_gen, self.gen_0),

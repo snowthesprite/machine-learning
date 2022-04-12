@@ -3,6 +3,7 @@ sys.path.append('src')
 from genetic_tic_toe import *
 
 gene = GeneticAlgorithm(25)
+print('ran')
 gen_scores = gene.for_generation(100)
 
 import matplotlib.pyplot as plt
