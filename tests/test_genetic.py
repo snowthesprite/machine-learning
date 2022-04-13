@@ -2,7 +2,7 @@ import sys
 sys.path.append('src')
 from genetic_tic_toe import *
 
-gene = GeneticAlgorithm(25)
+gene = GeneticAlgorithm(24)
 print('ran')
 gen_scores = gene.for_generation(100)
 

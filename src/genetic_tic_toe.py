@@ -108,18 +108,39 @@ class GeneticAlgorithm () :
         #print(scores)
         return [group[id] for id, score in scores[:num]]
 
-    def tournament_5(self, group) :
+    def tournament(self, group) :
+        grup = group.copy()
         chosen = []
-        while len(chosen) < 5 :
+        while len(chosen) < self.pop_size/4 :
             round = []
-            while len(round) < 3 :
-                player = rand.choice(group)
-                if player not in chosen and player not in round :
-                    round.append(player)
+            while len(round) < self.pop_size/8 :
+                player = rand.choice(grup)
+                if player in chosen or player in round :
+                    grup.remove(player)
+                round.append(player)
+            if len(grup) < self/pop_size/4 + self.pop_size/8 :
+                print('ran')
+                return False
             best = self.find_top(round, 1)
             chosen.extend(best)
         return chosen
             
+    def stochastic(self, group) :
+        grup = self.find_plr_scores_same(group)
+        chosen = []
+        while len(chosen) < self.pop_size/4 :
+            round = []
+            while len(round) < self.pop_size/8 :
+                player = rand.choice(grup.keys())
+                if player in chosen or player in round :
+                    grup.remove(player)
+                round.append(player)
+            if len(grup) < self/pop_size/4 + self.pop_size/8 :
+                print('ran')
+                return False
+            best = self.find_top(round, 1)
+            chosen.extend(best)
+        return chosen
 
     def avg_score(self, group_1, group_2) :
         scores = self.find_player_scores(group_1, group_2)
@@ -164,16 +185,23 @@ class GeneticAlgorithm () :
     def for_generation(self, gen) :
         wanted_data = {0: {'vs_1': 0, 'vs_prev': 0, 'freq': self.calc_avg_freq(self.gen_0)}}
         prev_gen = self.gen_0
-        for generation in range(1,gen) :
+        cur_gen = []
+        generation = 1
+        while prev_gen != cur_gen or generation < gen :
             print(generation)
             #top = self.find_top(prev_gen, 5)      
-            top = self.tournament_5(prev_gen)      
+            top = self.tournament_5(prev_gen)
+            print(type(top), '\n')
+            if top == False :
+                return wanted_data  
             cur_gen = self.mate(top)
             cur_gen.extend(top)
             wanted_data[generation] = {'vs_1': self.avg_score(cur_gen, self.gen_0),
                                         'vs_prev': self.avg_score(cur_gen, prev_gen),
                                         'freq': self.calc_avg_freq(cur_gen)}
+            
             prev_gen = cur_gen
+            generation += 1
             #print('\n\n')
         return wanted_data
 
