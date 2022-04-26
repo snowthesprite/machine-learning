@@ -115,11 +115,13 @@ class GeneticAlgorithm () :
             round = []
             while len(round) < self.pop_size/8 :
                 player = rand.choice(grup)
-                if player in chosen or player in round :
+                if player in chosen  :
                     grup.remove(player)
+                    continue
+                elif player in round :
+                    continue
                 round.append(player)
-            if len(grup) < self/pop_size/4 + self.pop_size/8 :
-                print('ran')
+            if len(grup) < self.pop_size/4 + self.pop_size/8 :
                 return False
             best = self.find_top(round, 1)
             chosen.extend(best)
@@ -131,16 +133,19 @@ class GeneticAlgorithm () :
         while len(chosen) < self.pop_size/4 :
             round = []
             while len(round) < self.pop_size/8 :
-                player = rand.choice(grup.keys())
-                if player in chosen or player in round :
-                    grup.remove(player)
+                player = rand.choice(list(grup.items()))
+                if player in chosen  :
+                    grup.pop(player[0])
+                    continue
+                elif player in round :
+                    continue
                 round.append(player)
-            if len(grup) < self/pop_size/4 + self.pop_size/8 :
+            if len(grup) < self.pop_size/4 + self.pop_size/8 :
                 print('ran')
                 return False
-            best = self.find_top(round, 1)
-            chosen.extend(best)
-        return chosen
+            round.sort(reverse=True, key=(lambda x : x[1]))
+            chosen.append(round[0])
+        return [group[id] for id, score in chosen]
 
     def avg_score(self, group_1, group_2) :
         scores = self.find_player_scores(group_1, group_2)
@@ -190,7 +195,8 @@ class GeneticAlgorithm () :
         while prev_gen != cur_gen or generation < gen :
             print(generation)
             #top = self.find_top(prev_gen, 5)      
-            top = self.tournament_5(prev_gen)
+            #top = self.tournament(prev_gen)
+            top = self.stochastic(prev_gen)
             print(type(top), '\n')
             if top == False :
                 return wanted_data  
