@@ -1,4 +1,5 @@
-  from matrix import Matrix
+from matrix import Matrix
+
 class LinearRegressor :
     def __init__(self, data_frame, dependent_variable) :
         self.data_frame = data_frame
