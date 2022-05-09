@@ -55,10 +55,13 @@ class Matrix :
         copy.elements[row_index1], copy.elements[row_index2] = copy.elements[row_index2], copy.elements[row_index1]
         return Matrix(copy.elements)
 
-    def normalize_row(self, row_index) :
+    def normalize_row(self, row_index, col_index = None) :
         copy = self.copy()
         normalizer = None
         for column in range(copy.num_cols) :
+            if col_index != None : 
+                normalizer = copy.elements[row_index][col_index]
+                break
             if copy.elements[row_index][column] != 0 :
                 normalizer = copy.elements[row_index][column]
                 break
@@ -67,10 +70,13 @@ class Matrix :
                 copy.elements[row_index][column] = copy.elements[row_index][column] / normalizer
         return Matrix(copy.elements)
 
-    def clear_below(self, row_index) :
+    def clear_below(self, row_index, col_index = None) :
         copy = self.copy()
         non_zero = None
         for column in range(copy.num_cols) :
+            if col_index != None :
+                non_zero = copy.elements[row_index][col_index]
+                break
             if copy.elements[row_index][column] != 0 :
                 non_zero = copy.elements[row_index][column]
                 col_index = column
@@ -87,10 +93,13 @@ class Matrix :
                     copy.elements[rows][column] = copy.elements[rows][column] + (copy.elements[row_index][column] * sign * cancleator)
         return Matrix(copy.elements)
 
-    def clear_above(self, row_index) :
+    def clear_above(self, row_index, col_index = None) :
         copy = self.copy()
         sign = None
         for col in range(copy.num_cols) :
+            if col_index != None :
+                non_zero = copy.elements[row_index][col_index]
+                break
             if copy.elements[row_index][col] != 0 :
                 sign = int(copy.elements[row_index][col]/abs(copy.elements[row_index][col]))
                 col_index = col
