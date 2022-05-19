@@ -22,15 +22,16 @@ for (x,y) in data :
     norm_x = (x-x_min_max[0])/(x_min_max[1] - x_min_max[0])
     norm_y = (y-y_min_max[0])/(y_min_max[1] - y_min_max[0])
     normalized.append((norm_x, 2*norm_y-1))
-
+'''
 node_num = [1, 10, 6, 3, 1]
+'''
 net_set = []
 
 for layer_num in range(len(node_num)) :
     if layer_num != 0 :
         net_set[layer_num - 1].append('bias')
     net_set.append([node for node in range(node_num[layer_num])])
-'''
+
 def make_weights() :
     weights = {}
     for layer_num in range(1, len(node_num)) :
@@ -40,11 +41,13 @@ def make_weights() :
         prev_amnt = node_num[layer_num -1 ] + 1
         weights[layer_num-1] = [[rand.uniform(-2, 2)/10 for _ in range(cur_amnt)] for __ in range(prev_amnt)]
     return weights
-
+'''
 act_funct = (lambda x: (math.e**x - math.e ** (-x)) / (math.e**x + math.e ** (-x)))
 
-net_field = [NeuralNet(net_set, make_weights(), act_funct, normalized.copy(), 0.05) for _ in range(30)]
+#net_field = [NeuralNet(net_set, make_weights(), act_funct, normalized.copy(), 0.05) for _ in range(30)]
 
+net_field = NeuralNetField(node_num, act_funct, data, 30)
+'''
 def find_lowest_rss(amount, field) :
     rss_count = []
     for net_id in range(len(field)) :
@@ -81,6 +84,8 @@ for gen in range (100) :
         children.extend(child)
     next_gen.extend(children)
     current_generation = next_gen
+'''
+rss_gen_avg = net_field.evolve(100)
 
 import matplotlib.pyplot as plt
 plt.style.use('bmh')
