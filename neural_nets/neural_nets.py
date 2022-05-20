@@ -1,7 +1,7 @@
 from numpy.random import normal
 import random as rand
 import math
-
+#'''
 class Node (): 
     def __init__(self, id, act_funct) :
         self.id = id
@@ -19,7 +19,26 @@ class Node ():
 
     #def set_value(self, value) : 
         #self.value = (lambda net, x : sum(value(net, self.parents, self.id, x)))
+'''
+class Node (): 
+    def __init__(self, id, act_funct) :
+        self.id = id
+        self.parents = []
+        self.act_funct = act_funct
+        #self.parts = lambda net, parents, id, x : [net.weights[(parent.id, self.id)] * parent.output(net,x) for parent in self.parents]
+        #self.value = lambda net, x : sum(self.parts(net, self.parents, self.id, x))
+        self.value = None
+    
+    def output(self, input = None) :
+        #if input == None :
+            #return lambda x : self.act_funct(self.value(net, x))
+            #return (lambda x : self.value(x))
+        return self.act_funct(self.value(input))
 
+    def set_value(self, value) : 
+        self.value = (lambda x : sum(value(self.parents, self.id, x)))
+
+#'''
 '''
 class NeuralNet (): 
     def __init__(self, layers, weights, act_funct, data, mutation_rate = 0, premade = False) :
@@ -53,7 +72,7 @@ class NeuralNet ():
                     continue
                 #print(id)
                 new_node.parents = self.make_node_specifics(layer, weights, node_order, id)
-                new_node.set_value(lambda parents, id, x : [self.weights[(parent.id, id)] * parent.output()(x) for parent in parents])
+                new_node.set_value(lambda parents, id, x : [self.weights[(parent.id, id)] * parent.output(x) for parent in parents])
                 self.nodes[layer].append(new_node)
                 
     def make_node_specifics(self, layer, weights, node_order, id) :
@@ -89,8 +108,7 @@ class NeuralNet ():
     
     def calc_ans(self, input) :
         culmunate = self.nodes[len(self.nodes)-1][0]
-        return culmunate.value(self.weights, input)
-        #return culmunate.output(self.weights, input)
+        return culmunate.output(self.weights, input)
 
     ## RSS is a thing that exists and is, in fact, what you are taking the derivative of. 
     ## Not... whatever you were thinking
@@ -106,7 +124,7 @@ class NeuralNet ():
         for layer in range(len(self.nodes)-1) :
             for node_from in self.nodes[layer] :
                 for node_to in self.nodes[layer+1] :
-                    weights[(node_from.id, node_to.id)] = 1 #rand.uniform(-2, 2)/10
+                    weights[(node_from.id, node_to.id)] = rand.uniform(-2, 2)/10
         return weights
 #'''
 #'''
@@ -191,12 +209,13 @@ class NeuralNetField ():
             child = children_data[child_id]
             for (connect, weight) in parent.weights.items() :
                 child['weights'][connect] = weight * parent.mut_rate * normal(0,1)
-            child['mutate'] = parent.mut_rate ** (normal(0,1) / (2**(1/2) * weight_amount ** (1/4)))
+            child['mutate'] = parent.mut_rate ** (normal(0,1) / (2**(1/2) * self.num_weights ** (1/4)))
         return children_data
 
     def evolve(self, gens) :
         rss_gen_avg = {}
         for gen in range(gens) :
+            print(gen)
             gen_avg = [net.calc_rss() for net in self.curr_gen]
             rss_gen_avg[gen] = sum(gen_avg) / len(gen_avg)
             next_gen = [self.curr_gen[net_id] for (net_id, rss) in self.find_lowest_rss(15, self.curr_gen)]
