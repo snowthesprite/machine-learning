@@ -7,18 +7,20 @@ class Node ():
         self.id = id
         self.parents = []
         self.act_funct = act_funct
-        self.value = None
+        #self.parts = lambda net, parents, id, x : [net.weights[(parent.id, self.id)] * parent.output(net,x) for parent in self.parents]
+        #self.value = lambda net, x : sum(self.parts(net, self.parents, self.id, x))
+        self.value = lambda weights, x : sum([weights[(parent.id, self.id)] * parent.output(weights,x) for parent in self.parents])
     
-    def output(self, net = None, input = None) :
-        if input == None :
-            #return (lambda n, x : self.act_funct(self.value(n, x)))
-            return (lambda n, x : self.value(n,x))
-        return self.act_funct(self.value(net, input))
+    def output(self, weights, input = None) :
+        #if input == None :
+            #return lambda x : self.act_funct(self.value(net, x))
+            #return (lambda x : self.value(x))
+        return self.act_funct(self.value(weights, input))
 
-    def set_value(self, value) : 
-        self.value = (lambda n, x : sum(value(n, self.parents, self.id, x)))
+    #def set_value(self, value) : 
+        #self.value = (lambda net, x : sum(value(net, self.parents, self.id, x)))
 
-#'''
+'''
 class NeuralNet (): 
     def __init__(self, layers, weights, act_funct, data, mutation_rate = 0, premade = False) :
         self.nodes = layers
@@ -75,7 +77,6 @@ class NeuralNet ():
             rss += (point[1] - self.calc_ans(point[0])) ** 2
         return rss
 '''
-
 class NeuralNet (): 
     def __init__(self, nodes, weights, data, mutation_rate = 0, premade = False) :
         self.nodes = nodes
@@ -88,8 +89,8 @@ class NeuralNet ():
     
     def calc_ans(self, input) :
         culmunate = self.nodes[len(self.nodes)-1][0]
-        print(self)
-        return culmunate.output(self, input)
+        return culmunate.value(self.weights, input)
+        #return culmunate.output(self.weights, input)
 
     ## RSS is a thing that exists and is, in fact, what you are taking the derivative of. 
     ## Not... whatever you were thinking
@@ -105,10 +106,10 @@ class NeuralNet ():
         for layer in range(len(self.nodes)-1) :
             for node_from in self.nodes[layer] :
                 for node_to in self.nodes[layer+1] :
-                    weights[(node_from.id, node_to.id)] = rand.uniform(-2, 2)/10
+                    weights[(node_from.id, node_to.id)] = 1 #rand.uniform(-2, 2)/10
         return weights
-'''
-'''
+#'''
+#'''
 class NeuralNetField (): 
     def __init__(self, layers, act_funct, data, amount) :
         self.nodes = {}
@@ -133,18 +134,18 @@ class NeuralNetField ():
                 id += 1
                 new_node = Node(id, act_funct)
                 if node == 'bias' : 
-                    new_node.value = lambda x : 1
+                    new_node.value = lambda weights, x : 1
                     self.nodes[layer].append(new_node)
                     #print()
                     continue
                 if layer == 0 :
-                    new_node.value = lambda x : x
+                    new_node.value = lambda weights, x : x
                     self.nodes[layer].append(new_node)
                     #print()
                     continue
                 #print(id)
                 new_node.parents = self.make_node_specifics(layer, node_order, id)
-                new_node.set_value(lambda n, parents, id, x : [n.weights[(parent.id, id)] * parent.output()(n,x) for parent in parents])
+                #new_node.parts = (lambda net, parents, id, x : [net.weights[(parent.id, id)] * parent.output(net,x) for parent in parents])
                 self.nodes[layer].append(new_node)
                 
     def make_node_specifics(self, layer, node_order, id) :
@@ -208,6 +209,9 @@ class NeuralNetField ():
             next_gen.extend(children)
             self.curr_gen = next_gen
         return rss_gen_avg
+        
+    def calc_ans(self, input) :
+        return [net.calc_ans(input) for net in self.curr_gen]
 
     def create_gen(self, amount) :
         for _ in range(amount) :
@@ -233,7 +237,7 @@ class NeuralNetField ():
         self.num_weights = 111
         self.first_gen = []
         self.curr_gen = []
-        self.create_gen(amount)
+        self.create_gen(layers, act_funct, amount)
     
     def create_layers(self, node_layers) :
         net_set = []
@@ -276,12 +280,13 @@ class NeuralNetField ():
         return rss_gen_avg
 
     def create_gen(self, act_funct, amount) :
+        net_set = self.create_layers(layers)
         for _ in range(amount) :
-            net = NeuralNet(self.nodes, None, self.data, 0.5)
+            net = NeuralNet(self.nodes, self.make_weights(), self.data, 0.5)
             self.curr_gen.append(net)
             self.first_gen.append(net)
     
-'''def make_weights() :
+    def make_weights(self) :
         weights = {}
         for layer_num in range(1, len(node_num)) :
             cur_amnt = node_num[layer_num] + 1
@@ -290,4 +295,4 @@ class NeuralNetField ():
             prev_amnt = node_num[layer_num -1 ] + 1
             weights[(node_from)] = [[rand.uniform(-2, 2)/10 for _ in range(cur_amnt)] for __ in range(prev_amnt)]
         return weights
-'''
+#'''

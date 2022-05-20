@@ -42,11 +42,15 @@ def make_weights() :
         weights[layer_num-1] = [[rand.uniform(-2, 2)/10 for _ in range(cur_amnt)] for __ in range(prev_amnt)]
     return weights
 '''
-act_funct = (lambda x: (math.e**x - math.e ** (-x)) / (math.e**x + math.e ** (-x)))
+#act_funct = (lambda x: (math.e**x - math.e ** (-x)) / (math.e**x + math.e ** (-x)))
+act_funct = lambda x : x
 
-#net_field = [NeuralNet(net_set, make_weights(), act_funct, normalized.copy(), 0.05) for _ in range(30)]
+####net_field = [NeuralNet(net_set, make_weights(), act_funct, normalized.copy(), 0.05) for _ in range(30)]
+net_field = NeuralNetField(node_num, act_funct, data, 2)
+print(net_field.calc_ans(1))
+net_field.curr_gen[0].weights[(24,25)] = 4
+print(net_field.calc_ans(1))
 
-net_field = NeuralNetField(node_num, act_funct, data, 30)
 '''
 def find_lowest_rss(amount, field) :
     rss_count = []
@@ -85,8 +89,9 @@ for gen in range (100) :
     next_gen.extend(children)
     current_generation = next_gen
 '''
-rss_gen_avg = net_field.evolve(100)
+#rss_gen_avg = net_field.evolve(100)
 
+'''
 import matplotlib.pyplot as plt
 plt.style.use('bmh')
 x_axis = []
@@ -99,3 +104,4 @@ for (gen, rss) in rss_gen_avg.items() :
 plt.plot(x_axis, y_axis)
 
 plt.savefig('neural_nets/evolving.png')
+'''
