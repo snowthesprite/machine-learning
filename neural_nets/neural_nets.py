@@ -124,7 +124,6 @@ class NeuralNetField ():
         self.create_nodes(layers, act_funct)
 
         self.num_weights = 111
-        self.first_gen = []
         self.curr_gen = []
 
         self.create_gen(amount)
@@ -191,45 +190,22 @@ class NeuralNetField ():
         for (connect, weight) in parent.weights.items() :
             child['weights'][connect] = weight + parent.mut_rate * normal()
         child['mutate'] = parent.mut_rate * math.exp(normal() / (2**(1/2) * self.num_weights ** (1/4)))
-        #child['mutate'] = parent.mut_rate
+
         return child
 
     def evolve(self, gens) :
         rss_gen_avg = {}
         for gen in range(gens) :
-            if gen % 10 == 0 :
+            if gen % 100 == 0 :
                 print(gen)
             gen_avg = [net.calc_rss() for net in self.curr_gen]
-            '''
-            gen_avg = []
-            for id, net in enumerate(self.curr_gen) :
-                rss = net.calc_rss()
-                print('Id: {}, RSS: {}'.format(id, rss))
-                gen_avg.append(rss)
-            #'''
             rss_gen_avg[gen] = sum(gen_avg) / len(gen_avg)
+
             self.curr_gen.sort(key=(lambda x: x.calc_rss()))
-            #next_gen = [self.curr_gen[net_id] for (net_id, rss) in self.find_lowest_rss(15, self.curr_gen)]
-            '''
-            next_gen = []
-            chosen = []
-            best_rss = []
-            for (net_id, rss) in self.find_lowest_rss(15, self.curr_gen) :
-                next_gen.append(self.curr_gen[net_id])
-                chosen.append(net_id)
-                best_rss.append(rss)
-            print('Selected Ids: {}'.format(chosen))
-            print(sum(best_rss) / 15)
-            print()
-            #'''
-            #children = []
             for id in range(0, 15) :
                 child = self.reproduce(self.curr_gen[id])
                 self.curr_gen[id+15].weights = child['weights']
                 self.curr_gen[id+15].mut_rate = child['mutate']
-                #children.append(child)
-            #next_gen.extend(children)
-            #self.curr_gen = next_gen
         return rss_gen_avg
         
     def calc_ans(self, input) :
@@ -239,5 +215,4 @@ class NeuralNetField ():
         for _ in range(amount) :
             net = NeuralNet(self.nodes, None, self.data, 0.05)
             self.curr_gen.append(net)
-            self.first_gen.append(net)
 #'''
