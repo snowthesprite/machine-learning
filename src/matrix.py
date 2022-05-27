@@ -72,18 +72,17 @@ class Matrix :
 
     def clear_below(self, row_index, col_index = None) :
         copy = self.copy()
-        non_zero = None
-        for column in range(copy.num_cols) :
+        sign = None
+        for col in range(copy.num_cols) :
             if col_index != None :
-                non_zero = copy.elements[row_index][col_index]
+                sign = int(copy.elements[row_index][col_index]/abs(copy.elements[row_index][col_index]))
                 break
-            if copy.elements[row_index][column] != 0 :
-                non_zero = copy.elements[row_index][column]
-                col_index = column
+            if copy.elements[row_index][col] != 0 :
+                sign = int(copy.elements[row_index][col]/abs(copy.elements[row_index][col]))
+                col_index = col
                 break
-        if non_zero == None :
+        if sign == None :
             return Matrix(copy.elements)
-        sign = int(non_zero/abs(non_zero))
         for rows in range(row_index, copy.num_rows) :
             cancleator = copy.elements[rows][col_index] / copy.elements[row_index][col_index]
             while copy.elements[rows][col_index] != 0 and rows != row_index :
@@ -98,7 +97,7 @@ class Matrix :
         sign = None
         for col in range(copy.num_cols) :
             if col_index != None :
-                non_zero = copy.elements[row_index][col_index]
+                sign = int(copy.elements[row_index][col_index]/abs(copy.elements[row_index][col_index]))
                 break
             if copy.elements[row_index][col] != 0 :
                 sign = int(copy.elements[row_index][col]/abs(copy.elements[row_index][col]))
