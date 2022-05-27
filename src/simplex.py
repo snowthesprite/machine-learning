@@ -49,13 +49,13 @@ class Simplex () :
     
     def run(self) :
         while True :
-            print(self.maximum())
+            #print(self.maximum())
             max_var = self.pick_max_var()
             #print(max_var)
             if max_var == None :
                 return
             chosen_row = self.pick_best_constraint(max_var)
-            print()
+            #print()
             self.matrix = self.matrix.normalize_row(chosen_row, max_var)
             self.matrix = self.matrix.clear_above(chosen_row, max_var)
             self.matrix = self.matrix.clear_below(chosen_row, max_var)
