@@ -200,6 +200,46 @@ class GeneticAlgorithm () :
             tier -= 1
         return chosen
 
+    def stochastic_B(self, group) :
+        bracket = self.bracket(group)
+        flat_bracket = [player for player in bracket[tier] for tier in range(len(bracket)-1, 0, -1)]
+        chosen = []
+        while len(chosen) < self.pop_size/4 :
+            round = []
+            while len(round) < self.pop_size/8 :
+                player = rand.choice(flat_bracket)
+                if player in chosen  :
+                    continue
+                elif player in round :
+                    continue
+                round.append(player)
+            if len(grup) < self.pop_size/4 + self.pop_size/8 :
+                print('ran')
+                return False
+            round.sort(reverse=True, key=(lambda x : flat_bracket.index(x)))
+            chosen.append(round[0])
+            flat_bracket.remove(round[0])
+        return chosen
+
+    def tournament_B(self, group) :
+        grup = group.copy()
+        chosen = []
+        while len(chosen) < self.pop_size/4 :
+            round = []
+            while len(round) < self.pop_size/8 :
+                player = rand.choice(grup)
+                if player in chosen  :
+                    grup.remove(player)
+                    continue
+                elif player in round :
+                    continue
+                round.append(player)
+            if len(grup) < self.pop_size/4 + self.pop_size/8 :
+                return False
+            best = self.find_top(round, 1)
+            chosen.extend(best)
+        return chosen
+
     def calc_avg_freq(self, group) :
         data = {'state_win': 0, 'win': 0, 'state_block': 0, 'block': 0}
         for state in self.good_moves :
