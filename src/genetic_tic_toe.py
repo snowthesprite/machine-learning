@@ -85,8 +85,10 @@ class GeneticAlgorithm () :
                     plr_score[0][plr_1] += 1
                     plr_score[1][plr_2] -= 1
         return plr_score
+    
 
-    def find_plr_scores_same(self, group) :
+    #Change name on this, not right
+    def hard_cutoff_RR(self, group) :
         plr_score = {index : 0 for index in range(len(group))}
         for plr_1 in range(len(group)) :
             for plr_2 in range(len(group)) :
@@ -102,13 +104,13 @@ class GeneticAlgorithm () :
         return plr_score
     
     def find_top(self, group, num) :
-        scores = self.find_plr_scores_same(group)
+        scores = self.hard_cutoff_RR(group)
         scores = [score for score in scores.items()]
         scores.sort(reverse=True, key=(lambda x : x[1]))
         #print(scores)
         return [group[id] for id, score in scores[:num]]
 
-    def tournament(self, group) :
+    def tournament_RR(self, group) :
         grup = group.copy()
         chosen = []
         while len(chosen) < self.pop_size/4 :
@@ -127,8 +129,8 @@ class GeneticAlgorithm () :
             chosen.extend(best)
         return chosen
             
-    def stochastic(self, group) :
-        grup = self.find_plr_scores_same(group)
+    def stochastic_RR(self, group) :
+        grup = self.hard_cutoff(group)
         chosen = []
         while len(chosen) < self.pop_size/4 :
             round = []
@@ -163,6 +165,40 @@ class GeneticAlgorithm () :
                     kids[1][state] = group[rand.choice([mom_1,mom_2])][state]
                 children.extend(kids)
         return children
+
+    def bracket (self, group) :
+        bracket = {0: group.copy()}
+        current_round = 0
+        while len(bracket[current_round]) > 1 :
+            tier = bracket[current_round]
+            winners = []
+            loosers = []
+            while len(tier) == len(winners) :
+                round = []
+                while len(round) < 2 :
+                    player = rand.choice(tier)
+                    if player in round or player in loosers:
+                        continue
+                    round.append(player)
+                game = self.run_game(round) - 1
+                winners.append(player[game])
+                tier.remove(player[game])
+                loosers.append(player[(game+1)%2])
+            current_round += 1
+            bracket[current_round] = winners
+        return bracket
+
+    def hard_cutoff_B(self, group) :
+        bracket = self.bracket(group)
+        tier = len(bracket)-1
+        chosen = []
+        while len(chosen) < self.pop_size/4 :
+            for player in bracket[tier] :
+                if len(chosen) < self.pop_size/4 :
+                    break
+                chosen.append(player)
+            tier -= 1
+        return chosen
 
     def calc_avg_freq(self, group) :
         data = {'state_win': 0, 'win': 0, 'state_block': 0, 'block': 0}
