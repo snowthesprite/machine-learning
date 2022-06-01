@@ -1,8 +1,9 @@
 import random as rand
 #and tic-tac-toe...
 class GeneticAlgorithm () :
-    def __init__(self, num_players) :
+    def __init__(self, num_players, mut_rate=0) :
         self.pop_size = num_players
+        self.mut_rate = mut_rate
         self.gen_0 = self.create_players()
         self.good_moves = self.state_freq()
 
@@ -154,7 +155,7 @@ class GeneticAlgorithm () :
         g_1_score = [score for score in scores[0].values()]
         #print(sum(g_1_score)/len(g_1_score))
         return sum(g_1_score)/len(g_1_score)
-
+    '''
     def mate(self, group) :
         children = []
         for mom_1 in range(len(group)) :
@@ -165,6 +166,18 @@ class GeneticAlgorithm () :
                     kids[1][state] = group[rand.choice([mom_1,mom_2])][state]
                 children.extend(kids)
         return children
+    '''
+    def mate(self, group) :
+        children = []
+        while len(children) + len(group) < self.pop_size :
+            mom_1 = rand.choice(group)
+            mom_2 = rand.choice(group)
+            kid = {}
+            for state in mom_1 :
+                options = [mom_1[state], mom_2[state], rand.choice(self.get_possible_moves(state))]
+                kid[state] = rand.choices(options,weights=((1-self.mut_rate)/2, (1-self.mut_rate)/2, self.mut_rate),k=1)
+            children.append(kid)
+        return children
 
     def bracket (self, group) :
         bracket = {0: group.copy()}
@@ -173,17 +186,21 @@ class GeneticAlgorithm () :
             tier = bracket[current_round]
             winners = []
             loosers = []
-            while len(tier) == len(winners) :
+            while len(tier) != len(winners) :
                 round = []
                 while len(round) < 2 :
                     player = rand.choice(tier)
                     if player in round or player in loosers:
                         continue
                     round.append(player)
-                game = self.run_game(round) - 1
-                winners.append(player[game])
-                tier.remove(player[game])
-                loosers.append(player[(game+1)%2])
+                game = self.run_game(round) 
+                if game == 'tie' :
+                    game = 0
+                else :
+                    game = int(game)-1
+                winners.append(round[game])
+                tier.remove(round[game])
+                loosers.append(round[(game+1)%2])
             current_round += 1
             bracket[current_round] = winners
         return bracket
@@ -194,7 +211,7 @@ class GeneticAlgorithm () :
         chosen = []
         while len(chosen) < self.pop_size/4 :
             for player in bracket[tier] :
-                if len(chosen) < self.pop_size/4 :
+                if len(chosen) >= self.pop_size/4 :
                     break
                 chosen.append(player)
             tier -= 1
@@ -202,7 +219,7 @@ class GeneticAlgorithm () :
 
     def stochastic_B(self, group) :
         bracket = self.bracket(group)
-        flat_bracket = [player for player in bracket[tier] for tier in range(len(bracket)-1, 0, -1)]
+        flat_bracket = [player for tier in range(len(bracket)-1, 0, -1) for player in bracket[tier]]
         chosen = []
         while len(chosen) < self.pop_size/4 :
             round = []

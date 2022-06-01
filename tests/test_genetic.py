@@ -2,7 +2,10 @@ import sys
 sys.path.append('src')
 from genetic_tic_toe import *
 
-gene = GeneticAlgorithm(24)
+gene = GeneticAlgorithm(8)
+print(len(gene.mate(gene.gen_0[:3])))
+
+'''
 print('ran')
 gen_scores = gene.for_generation(100)
 
@@ -34,5 +37,5 @@ plt.savefig('win_freq.png')
 plt.clf()
 plt.plot(generation, block_freq)
 plt.savefig('block_freq.png')
-
+'''
 
