@@ -208,12 +208,10 @@ class GeneticAlgorithm () :
             round = []
             while len(round) < self.pop_size/8 :
                 player = rand.choice(flat_bracket)
-                if player in chosen  :
-                    continue
-                elif player in round :
+                if player in round :
                     continue
                 round.append(player)
-            if len(grup) < self.pop_size/4 + self.pop_size/8 :
+            if len(flat_bracket) < self.pop_size/4 + self.pop_size/8 :
                 print('ran')
                 return False
             round.sort(reverse=True, key=(lambda x : flat_bracket.index(x)))
@@ -228,16 +226,14 @@ class GeneticAlgorithm () :
             round = []
             while len(round) < self.pop_size/8 :
                 player = rand.choice(grup)
-                if player in chosen  :
-                    grup.remove(player)
-                    continue
-                elif player in round :
+                if player in round :
                     continue
                 round.append(player)
             if len(grup) < self.pop_size/4 + self.pop_size/8 :
                 return False
-            best = self.find_top(round, 1)
-            chosen.extend(best)
+            bracket = self.bracket(round)
+            chosen.append(bracket[len(bracket)-1][0])
+            grup.remove(bracket[len(bracket)-1][0])
         return chosen
 
     def calc_avg_freq(self, group) :
