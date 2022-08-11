@@ -15,5 +15,6 @@ matrix = Matrix([[2,1,1,14],
                 [1,2,1,0]])
 
 simp = Simplex(matrix)
+print(simp.m)
 simp.run()
 print(simp.maximum())
