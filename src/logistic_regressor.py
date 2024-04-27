@@ -2,7 +2,7 @@ from linear_regressor import LinearRegressor
 from dataframe import DataFrame
 import math
 
-class LogisticRegressor (LinearRegressor):
+class LogisticRegressor (LinearRegressor) :
     def __init__(self, data_frame, dependent_variable, premade = False, upper_bound = 1) :
         self.depend_var = dependent_variable
         self.up_bound = upper_bound
